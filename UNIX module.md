@@ -2,6 +2,7 @@
 1. Log into OSC (ondemand.osc.edu)
 2. Using the menu bar at the top, navigate to Files > /fs/scratch/PAS3124
 3. Click the **>_Open in terminal** button at the top to open a new UNIX terminal window in a new tab.
+
 ## Basic UNIX commands
 4. Where am I?
 5. `pwd`
@@ -36,23 +37,81 @@
 
 # Class 3
 ## More basic UNIX commands
-1. Go to the "sarscov2" directory in "yourname" directory. You will use `cd`. Tip: Start typing the directory name and then press tab. It will try to complete the name until it hits a unique character. This will save you lot of typing!
-2. **Viewing files**
-3. `head` or `tail` commands can be used to view contents of a file. `head NC_045512.2.fasta` will show the first 10 lines of the FASTA file. `head -n 20 NC_045512.2.fasta` uses option `-n` with specified variable 20 and will show first 20 lines.
-4. `tail NC_045512.2.fasta` will show the last 10 lines of the FASTA file.` How will you look at the last 25 lines of the FASTA file?
-5. More ways to view files: `more` or `less` followed by `filename` will print it to the screen in scrollable format. Scroll up or down using arrows, or down by hitting space. Press `q` to quit more and return to command prompt
-6. Files can also be viewed using the `cat` command. It will print it all to the screen.
-7. **Getting help**
-8. `man` followed by program name will open manual for that program to  view options available for each program/command. For example, `man head` will open manual for `head`. Scroll up or down using arrows, or down by hitting space. Press q to quit and return to command prompt.
-9. 
+1. Go to the "sarscov2" directory in "yourname" directory. You will use `cd`.
+2. Tip: Start typing the directory name and then press tab. It will try to complete the name until it hits a unique character. This will save you lot of typing!
 
-In this directory, we will get a file with yeast (S. cerevisiae) genome features and investigate some features of yeast genes and genome using basic unix commands. Originally, these files are available from Saccharomyces Genome Database (SGD; yeastgenome.org) but we will get the files that are hosted by biostar handbook (allegedly, links to files and datasets in SGD can change frequently).
-Two commands to get data from http (or ftp) links are `curl` (step 8) or `wget` (step 9). The usage is like any other unix command: program flags input output. We will use `>` to direct the output to a file.
-Getting data with `curl` with option `-s` (silent) that will not print progress meter or errors on screen: `curl -s http://data.biostarhandbook.com/data/SGD_features.tab > SGD_features.tab`
-Getting data with wget (no flags available): `wget http://data.biostarhandbook.com/data/SGD_features.tab`. wget will automatically save the file, so you don't need `> filename`. To save a file with a different name using wget you need to specify the `-O filename` flag.
-Check if the file is now in your directory; use `ls` or `ll`
-Now get the README file that explains what is in the SGD_features.tab file: `wget http://data.biostarhandbook.com/data/SGD_features.README` (or use `curl`).
-Use `ls` or `ll` to check directory contents again. The README file should also be there now.
-View contents of the .tab file. You can use `more` or `less`. Press “space” to move forward, “b” to move backward, q or ESC to exit. Using `head` or `tail` can show 10 lines by default. Again, usage is same: program flags input output. In this case only program and input needs specified. Output will be on your screen. Can you make sense of what type of information is there in the file?
-View the README file and read through the description. Now look at a few lines of the .tab file (use `head` or `tail`; use `-n` followed by a small number as a flag) and it may make more sense what all information is in the .tab file. 
+### Viewing files
+1. `head` or `tail` commands can be used to view contents of a file. `head NC_045512.2.fasta` will show the first 10 lines of the FASTA file. `head -n 20 NC_045512.2.fasta` uses option `-n` with specified variable 20 and will show first 20 lines.
+2. `tail NC_045512.2.fasta` will show the last 10 lines of the FASTA file.` How will you look at the last 25 lines of the FASTA file?
+3. More ways to view files: `more` or `less` followed by `filename` will print it to the screen in scrollable format. Scroll up or down using arrows, or down by hitting space. Press `q` to quit more and return to command prompt
+4. Files can also be viewed using the `cat` command. It will print it all to the screen.
+5. `cat` can be used to concatenate files. It may show up later.
 
+### Exercise 1:
+Create a new text file that contains the first 20 lines of the SARS-CoV2 fasta file. Save this file as "NC_045512.2.head20.txt". Take a screenshot of your work to submit.
+
+### Getting help
+1. `man` followed by program name will open manual for that program to  view options available for that program/command. For example, `man head` will open manual for `head`.
+2. What does the option `-n` mean?
+3. Scroll up or down manual pages using arrows, or down by hitting space. Press q to quit and return to command prompt.
+
+### Counting lines and characters
+1. Can we get the size of the SARS-CoV2 genome by counting the number of nucleotide characters in the FASTA file? Yes we can!
+2. Make sure you are in the `sarscov2` directory. Check if the FASTA file is there by using `ls`
+3. Command `wc` gives word, line and character counts for a particular file. Type `wc NC_045512.2.fasta` and press enter
+4. To get only line numbers, `wc` can be run with `-l` option. `wc -c` will give only the character count.
+5. What is the character count? Compare it to the genome size on Genome Browser. Why is it different?
+6. Is it the first line in the FASTA file that has the name and other info about the file? That can't be it.
+7. We can actually investigate this if we learn couple of more tricks, i.e., commands.
+
+### Combining two different commands
+1. **`|`** or pipe can be used to daisy-chain two or more commands. It pipes the output of the first command as input into the second.
+2. Try this.
+3. `tail -23 NC_045512.2.fasta | head -1` will pipe the output of tail (last 23 lines of the FASTA file) into `head -1` to show the 23rd line from the bottom of the FASTA file.
+4. Always think of more ways to use the pipe.
+
+### Finding patterns using grep
+1. **`grep`** or "global regular expression print", is a search tool in UNIX. It can be used to find patterns and either select them, show them or even ignore them.
+2. `grep "A" NC_045512.2.fasta` will find all A's in the FASTA file.
+3. Now if we "pipe" the output of the previous line into `wc -l`, we can count how many lines have A's. Type this `grep "A" NC_045512.2.fasta | wc -l`
+4. How many lines have A's in the FASTA file?
+5. `grep` with `-v` option will find a pattern and hide it. So `grep -v "A" NC_045512.2.fasta` will show lines that DO NOT have A's. To count these lines, you can pipe the output of `grep` to `wc -l`
+6. `grep` with `-o` option will print only the matched parts, each on a separate line. If we do `grep -o "A" NC_045512.2.fasta` and pipe it into `wc -l` we can count the number of A's in the file!
+7. `grep -o "[AT]" NC_045512.2.fasta` will count all A's or T's in the FASTA file.
+8. Tip: You can press up arrow on command prompt to show previous commands you have typed. Keep hitting the up (and down) arrows as needed to bring up an old command and then you can edit it as necessary. Also saves lots of typing! 
+
+### Exercise 2: 
+1. Can you now tell the size of the SARS-CoV2 genome? Take a screenshot of your work to submit.
+2. Why is the number still not exactly the same as on the Genome Browser?
+
+### Getting human chromosome 22 sequence
+1. Make a new directory called `chr22` in your personal directory 
+2. Go to this new directory `cd chr22`
+3. Get human chr22 fasta file using `curl https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr22.fa.gz > chr22.fa.gz`
+4. Note how `>` is used to save the curl output to a file.
+
+### Data decompression
+1. Three ways to decompress the `chr22.fa.gz` file (any one can be used):
+   
+```
+      gzip -d chr22.fa.gz
+      gunzip chr22.fa.gz
+      gunzip -c chr22.fa.gz > chr22.fa
+```
+2. Third option is preferred as `-c` option saves the original file while the first two options do not.
+    
+### Data compression (skip if no time)
+1. Files and directories can be zipped into `tar` (tape archive) format.
+2. To do this, let's make new files out of `chr22.fa`, move them into a directory of their own.
+3. Write out first 10 lines of the `chr22.fa` into a new file called `chr22.head.fa`. There are many ways to do this (try `cat chr22.fa | head -10 > chr22.head.fa`).
+4. Now let's write the last 10 lines of the `chr22.fa` file into another file and call this `chr22.tail.fa`
+5. Make a new directory. Let's call it `headtail`
+6. Move `chr22.head.fa` and `chr22.tail.fa` to this directory: `mv chr22.*.fa headtail/`. Note the use of `*`, which is called a "wild-card" and it will match all files that contain rest of the filename characters. In this case both chr22.head.fa and chr22.tail.fa will be moved.
+7. Now archive this directory: `tar czfv chr22headtail.tar.gz headtail/*`
+
+### Sizing up chr22
+1. Check the sequence at the start and end of chromosome: `head` or `tail` for a defined set of lines; try `more` or `less` and use space to scroll through, ctrl+c to terminate.
+2. How many nucleotides are in chr22? Per Genome Reference Consortium, it is **50,818,468**
+3. Try `wc chr22.fa`. It gives line, word and character counts, respectively. The character count can give us chr length but it is a bigger number than expected. Why?
+4. Use `grep -v ">"` to exclude the first line, `pipe` the output to `wc -c`.
+5. Still a bigger number! Why? How about those hidden newline characters?
