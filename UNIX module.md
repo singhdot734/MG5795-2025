@@ -78,7 +78,7 @@ Create a new text file that contains the first 20 lines of the SARS-CoV2 fasta f
 5. `grep` with `-v` option will find a pattern and hide it. So `grep -v "A" NC_045512.2.fasta` will show lines that DO NOT have A's. To count these lines, you can pipe the output of `grep` to `wc -l`
 6. `grep` with `-o` option will print only the matched parts, each on a separate line. If we do `grep -o "A" NC_045512.2.fasta` and pipe it into `wc -l` we can count the number of A's in the file!
 7. `grep -o "[AT]" NC_045512.2.fasta` will count all A's or T's in the FASTA file.
-8. Tip: You can press up arrow on command prompt to show previous commands you have typed. Keep hitting the up (and down) arrows as needed to bring up an old command and then you can edit it as necessary. Also saves lots of typing! 
+8. Tip: You can press up arrow on command prompt to show previous commands you have typed. Keep hitting the up (and down) arrows as needed to bring up an old command and then you can edit it as necessary. Also saves lots of typing! And errors!!
 
 ### Exercise 2: 
 1. Can you now tell the size of the SARS-CoV2 genome? Take a screenshot of your work to submit.
@@ -106,7 +106,7 @@ Create a new text file that contains the first 20 lines of the SARS-CoV2 fasta f
 3. Write out first 10 lines of the `chr22.fa` into a new file called `chr22.head.fa`. There are many ways to do this (try `cat chr22.fa | head -10 > chr22.head.fa`).
 4. Now let's write the last 10 lines of the `chr22.fa` file into another file and call this `chr22.tail.fa`
 5. Make a new directory. Let's call it `headtail`
-6. Move `chr22.head.fa` and `chr22.tail.fa` to this directory: `mv chr22.*.fa headtail/`. Note the use of `*`, which is called a "wild-card" and it will match all files that contain rest of the filename characters. In this case both chr22.head.fa and chr22.tail.fa will be moved.
+6. Move `chr22.head.fa` and `chr22.tail.fa` to this directory: `mv chr22.*.fa headtail/`. Note the use of `*`, which is called a "wild-card" and it will match all files that contain rest of the filename characters. In this case both chr22.head.fa and chr22.tail.fa will be moved. Saves typing and errors!
 7. Now archive this directory: `tar czfv chr22headtail.tar.gz headtail/*`
 
 ### Sizing up chr22
