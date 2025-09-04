@@ -125,3 +125,28 @@ Create a new text file that contains the first 20 lines of the SARS-CoV2 fasta f
 3. Try `wc chr22.fa`. It gives line, word and character counts, respectively. The character count can give us chr length but it is a bigger number than expected. Why?
 4. Use `grep -v ">"` to exclude the first line, `pipe` the output to `wc -c`.
 5. Still a bigger number! Why? How about those hidden newline characters?
+
+# Class 4
+## Opening up a terminal window
+1. Log into OSC (ondemand.osc.edu)
+2. Using the menu bar at the top, navigate to Files > /fs/scratch/PAS3124
+3. Click the **>_Open in terminal** button at the top to open a new UNIX terminal window in a new tab.
+4. Optional: choose a desired theme from the top right corner.
+5. Change working directory to chr22.
+
+## UNIX to find patterns in genome sequences (chr22)
+Let's first finish sizing up chr22 exercise from the last class.
+
+### Uncertain bases and repeats in genome sequences
+1. Count the number of A,T,G and Cs in chr22: `grep -o "[ATGC]" chr22.fa | wc -l`
+2. Hmmm... this number is quite smaller than the chr size. Could it be the Ns that we see at the top and bottom of the file using `head` and `tail`? Modify the code in line 1 above to also include Ns in your count.
+3. The answer is still smaller than the chr22 size. So, there are other characters in the sequence.
+4. `grep -o "." chr22.fa | wc -l` will count all (or any) characters. This is better!
+5. We can actually count how many times a particular character or string is repeated by combining `grep` with `sort` and `uniq` commands.
+6. As the name suggests, `sort` will sort any input and `uniq` will report or omit repeated lines and can give count of how many times each character or line is repeated.
+7. `grep -o "." chr22.fa | sort | uniq -c` will give count of each unique character in chr22.fa file.
+8. Now we can see what all characters and how many times they are present in the chr22 file.
+9. We will discuss why there Ns and why bases are represented by both upper and lower case letters.
+
+
+11. 
