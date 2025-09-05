@@ -123,7 +123,7 @@ Create a new text file that contains the first 20 lines of the SARS-CoV2 fasta f
 1. Check the sequence at the start and end of chromosome: `head` or `tail` for a defined set of lines; try `more` or `less` and use space to scroll through, ctrl+c to terminate.
 2. How many nucleotides are in chr22? Per Genome Reference Consortium, it is **50,818,468**
 3. Try `wc chr22.fa`. It gives line, word and character counts, respectively. The character count can give us chr length but it is a bigger number than expected. Why?
-4. Use `grep -v ">"` to exclude the first line, `pipe` the output to `wc -c`.
+4. Use `grep -v ^">"` to exclude the first line, `pipe` the output to `wc -c`. Or use `tail -1016370 chr22.fa` and then pipe it to `wc -c`
 5. Still a bigger number! Why? How about those hidden newline characters?
 
 # Class 4
