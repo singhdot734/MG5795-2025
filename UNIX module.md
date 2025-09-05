@@ -143,10 +143,22 @@ Let's first finish sizing up chr22 exercise from the last class.
 3. The answer is still smaller than the chr22 size. So, there are other characters in the sequence.
 4. `grep -o "." chr22.fa | wc -l` will count all (or any) characters. This is better!
 5. We can actually count how many times a particular character or string is repeated by combining `grep` with `sort` and `uniq` commands.
-6. As the name suggests, `sort` will sort any input and `uniq` will report or omit repeated lines and can give count of how many times each character or line is repeated.
+6. As the name suggests, `sort` will sort any input, in this particular example it will put identical line numbers on consecutive lines, and `uniq` will report or omit repeated lines and can give count of how many times each character or line is repeated.
 7. `grep -o "." chr22.fa | sort | uniq -c` will give count of each unique character in chr22.fa file.
 8. Now we can see what all characters and how many times they are present in the chr22 file.
 9. We will discuss why there Ns and why bases are represented by both upper and lower case letters.
+### Exercise 1: Take a screenshot of your work in step 7 to submit.
 
-
-11. 
+### Counting the number of restriction enzyme sites in chr22
+1. How frequently do we expect EcoRI sites to occur? Or, how many EcoRI sites are expected in chr22 if we hypothesize that restriction sites appear randomly?
+2. Let's look for EcoRI site "GAATTC". Try `grep --color=ALWAYS "GAATTC" chr22.fa | head`
+3. You will see only those lines which have a GAATTC sequence. If you do head -30, you will see a line with the sequence more than once.
+4. Pipe out the grep output to wc -l. This is the number of lines with GAATTC sequence. Is this the final answer?
+5. There could be some lines with more than one EcoRI site. To find which are these lines, add the following flags to the grep command above: -o (output only the string that is being searched); -n (print line numbers where string is found).
+6. Now pipe output from grep into sort then into uniq -c (report only unique lines with count), and then into sort -n (sort by number). Note that sort is used twice. This is how it will look: `grep -o -n "GAATTC" chr22.fa | sort | uniq -c | sort -n`
+7. How many lines have more than one EcoRI site?
+8. So, how many EcoRI sites are there in chr22?
+9. Is this the final answer? Why not? Hint: there are bases in lower case as well.
+10. `grep` with `-i` option ignores case while searching. Modify the command above in lines 4 and 5 to find the remaining sites.
+11. How close is the number that we got to the one we hypothesized? Does this confirm or reject our hypothesis?
+### Exercise 2: Take a screenshot of your work in step 10 to submit.
