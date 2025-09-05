@@ -157,8 +157,8 @@ Let's first finish sizing up chr22 exercise from the last class.
 5. There could be some lines with more than one EcoRI site. To find which are these lines, add the following flags to the grep command above: -o (output only the string that is being searched); -n (print line numbers where string is found).
 6. Now pipe output from grep into sort then into uniq -c (report only unique lines with count), and then into sort -n (sort by number). Note that sort is used twice. This is how it will look: `grep -o -n "GAATTC" chr22.fa | sort | uniq -c | sort -n`
 7. How many lines have more than one EcoRI site?
-8. So, how many EcoRI sites are there in chr22?
+8. To count the number of sites, remove the -n option from the command in step 6. So, how many EcoRI sites are there in chr22?
 9. Is this the final answer? Why not? Hint: there are bases in lower case as well.
-10. `grep` with `-i` option ignores case while searching. Modify the command above in lines 4 and 5 to find the remaining sites.
+10. `grep` with `-i` option ignores case while searching. Modify the command above in step 8 to find the remaining sites.
 11. How close is the number that we got to the one we hypothesized? Does this confirm or reject our hypothesis?
 ### Exercise 2: Take a screenshot of your work in step 10 to submit.
