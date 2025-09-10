@@ -13,6 +13,7 @@
 5. This is how the command will look for RefSeq `curl -s https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.ncbiRefSeq.gtf.gz > hg38.ncbiRefSeq.gtf.gz`
 6. Both are gzipped files. Use `gunzip` to unzip the files. `-c` option will be needed if you want to save the original file. Don't forget to direct output to a file using `>`. You can use the same name as the downloaded file except for .gz.
 7. This is how the command will look for the RefSeq GTF: `gunzip -c hg38.ncbiRefSeq.gtf.gz > hg38.ncbiRefSeq.gtf`
+
 ### Exercise 1: Once both files are downloaded and unzipped, do `pwd` and `ls` and take a screenshot to submit your progress.
 
 ## Searching for patterns in GTF files
@@ -23,7 +24,16 @@
 5. Pipe output into `head -2` to limit to the first two lines. Otherwise there are several lines containing the entry "TBX1". We will talk why.
 6. Look at the individual tab separated fields of one line and cross check with GTF/GFF file format description in lecture slides to understand what is listed in each field of the GTF file.
 7. How many lines have the entry "TBX1" in each GTF file?
-8. 
-9. Can you use a combination of `grep` for chr22 and `wc -l` to see how many features are on chr22?
-10. Is there a quick way to get an estimate of how many protein coding transcripts are on chr22? Think about what is a feature unique to only protein coding genes/transcripts that is listed in the third field of the GTF file. Then you can combine multiple `grep` commands to look for particular strings and pipe it into line count.
-11. So how many (estimated) protein coding transcripts are on chr22? Take a screenshot of your code and answer from line 9 to submit one of the two activity 3 answers.
+8. Use a combination of `grep` for chr22 and `wc -l` to see how many features are on chr22?
+9. There are alternate assembly patches for each chromosome, which will also be counted. To restrict counting to pattern "chr22", either use `-w` option or define boundaries on either side "\bchr22\b".
+
+## Counting number of genes and other features in GTF files
+1. Column 3 of GTF file lists what gene feature is represented in a row. This can be used to count (or select) lines with particular features.
+2. `grep`, `sort`, `uniq` can be used for collapsing and counting feautres in column 3 but pattern matching is harder in GTF file as other columns (e.g., column 9) can have same patterns. The solution is to first select certain columns and then do pattern matching and counting.
+3. We will use `cat` to open data stream from a file. Then we will select particular column using `cut`. For example, `cut -f 2` will select column (field) 2.
+4. To summarize all gene features present in RefSeq GTF file, we can do this: `cat hg38.ncbiRefSeq.gtf | cut -f 3 | sort | uniq`
+5. These features can be counted by adding flag `-c` to `uniq`: `cat hg38.ncbiRefSeq.gtf | cut -f 3 | sort | uniq -c`
+6. To limit our summary or counting to a particular chr, say chr22, we can also add column 1 and then `grep` for chr22. Modify the command in step 5: `cat hg38.ncbiRefSeq.gtf | cut -f 1,3 | grep -w `chr22` | sort | uniq -c`
+7. So, how many transcripts on chr22?
+
+### Exercise 2: Emsembl GTF file column 3 also has entries for "gene" (missing in RefSeq GTF). Write a command to summarize and count all features including genes in the entire GTF file and on chr22. Note the difference in how chromosome numbers are listed in column 1 of the Ensembl GTF file. So, how many genes in the Ensembl GTF? And how many on chr22?
