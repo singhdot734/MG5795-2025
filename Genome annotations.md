@@ -16,6 +16,7 @@
 
 ### Exercise 1: Once both files are downloaded and unzipped, do `pwd` and `ls` and take a screenshot to submit your progress.
 
+# Class 6
 ## Searching for patterns in GTF files
 1. How many lines are in each GTF file?
 2. Take a look at each GTF file using `head`.
@@ -24,16 +25,39 @@
 5. Pipe output into `head -2` to limit to the first two lines. Otherwise there are several lines containing the entry "TBX1". We will talk why.
 6. Look at the individual tab separated fields of one line and cross check with GTF/GFF file format description in lecture slides to understand what is listed in each field of the GTF file.
 7. How many lines have the entry "TBX1" in each GTF file?
-8. Use a combination of `grep` for chr22 and `wc -l` to see how many features are on chr22?
-9. There are alternate assembly patches for each chromosome, which will also be counted. To restrict counting to pattern "chr22", either use `-w` option or define boundaries on either side "\bchr22\b".
+
+## How many chromosomes are represented in the GTF files?
+1. Before we go further, lets see what chromosomes are listed in GTF files.
+2. We will introduce a new command to select certain columns. Meet `cut`, which can select a particular column. For example, `cut -f 2` will select column (field) 2.
+3. We will first use `cat` to open data stream from a gtf file and then pipe it into `cut` to select column 1, and then sort and collapse column 1 contents. 
+4. This is how it can be done `cat hg38.ncbiRefSeq.gtf | cut -f 1 | sort | uniq -c`.
+5. What did you get?
+6. Hmmm...there are lot more entries than just chr 1-22 plus chr X and Y. There are alternate assembly patches for each chromosome.
+7. So, if we want to count chromosomes, we will have to refine our search patterns. For example, if we want to use a combination of `grep` for chr22 and `wc -l` to see how many features are on chr22, we will have to restrict counting to pattern "chr22", either using `-w` option or define boundaries on either side "\bchr22\b". This will force exact match to "chr22".
+8. So, go ahead and try to count all the rows/lines that contain chr22. This will do it: `grep -w 'chr22' hg38.ncbiRefSeq.gtf | wc -l`
+9. Using the above steps, similarly investigate all chromosome entries in the Ensembl GTF file.
 
 ## Counting number of genes and other features in GTF files
-1. Column 3 of GTF file lists what gene feature is represented in a row. This can be used to count (or select) lines with particular features.
+1. Column 3 of GTF file lists what gene feature is represented in a row. If we count how many rows have a particular feature, we can get an idea about their counts in a genome.
 2. `grep`, `sort`, `uniq` can be used for collapsing and counting feautres in column 3 but pattern matching is harder in GTF file as other columns (e.g., column 9) can have same patterns. The solution is to first select certain columns and then do pattern matching and counting.
-3. We will use `cat` to open data stream from a file. Then we will select particular column using `cut`. For example, `cut -f 2` will select column (field) 2.
+3. We will use `cat` to open data stream from a file. Then we will select particular column using `cut`.
 4. To summarize all gene features present in RefSeq GTF file, we can do this: `cat hg38.ncbiRefSeq.gtf | cut -f 3 | sort | uniq`
 5. These features can be counted by adding flag `-c` to `uniq`: `cat hg38.ncbiRefSeq.gtf | cut -f 3 | sort | uniq -c`
 6. To limit our summary or counting to a particular chr, say chr22, we can also add column 1 and then `grep` for chr22. Modify the command in step 5: `cat hg38.ncbiRefSeq.gtf | cut -f 1,3 | grep -w 'chr22' | sort | uniq -c`
 7. So, how many transcripts on chr22?
 
-### Exercise 2: Emsembl GTF file column 3 also has entries for "gene" (missing in RefSeq GTF). Write a command to summarize and count all features including genes in the entire Ensembl GTF file and on chr22. Note the difference in how chromosome numbers are listed in column 1 of the Ensembl GTF file. So, how many genes in the Ensembl GTF? And how many on chr22?
+### Exercise 1: Ensembl GTF file column 3 also has entries for "gene" (missing in RefSeq GTF). Write a command to summarize and count all features including genes in the entire Ensembl GTF file and on chr22. Note the difference in how chromosome numbers are listed in column 1 of the Ensembl GTF file. So, how many genes are in the Ensembl GTF? And how many on chr22?
+
+## Meet AWK to extract specific information from large text (GTF) files
+1. Very often in genomic data analysis, you will need to extract rows or columns from a text file like a GTF file to make a new text file. One of the most common text file needed during analysis is a BED file. We will learn some tricks of a simple yet powerful new programming language called `awk`.
+2. To make a custom BED file of all genes in Ensembl GTF file,  this awk one-liner will do the trick: `awk -F'\t' '{if ($3=="gene") {print $1,$4-1,$5-1,$3,$6,$7}}' > hg38_genes.bed`
+3. Use `head` to view the top 10 lines of the newly generated BED file. Column 4 has the same value in every row and is not very useful. It will be better to have gene_id in this column but that requires learning some more `awk` tricks.
+
+## So what are all the types of genes annotated in the human genome
+1. Ensembl GTF file column 9 has a tag called "gene_biotype", which specifies various types of gene classes, e.g., protein coding, miRNA, etc.
+2. If we can select all the rows that have column 3 = gene and then extract gene_biotype value into a new column, then we can collapse, sort and count all possible gene_biotype values.
+3. To do this, we want to learn how to extract specific information from rows and columns and save it in a new column.
+4. 
+
+
+
