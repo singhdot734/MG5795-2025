@@ -50,7 +50,7 @@
 
 ## Meet AWK to extract specific information from large text (GTF) files
 1. Very often in genomic data analysis, you will need to extract rows or columns from a text file like a GTF file to make a new text file. One of the most common text file needed during analysis is a BED file. We will learn some tricks of a simple yet powerful new programming language called `awk`.
-2. To make a custom BED file of all genes in Ensembl GTF file,  this awk one-liner will do the trick: `awk -F'\t' '{if ($3=="gene") {print $1,$4-1,$5,$3,$6,$7}}' | head`
+2. To make a custom BED file of all genes in Ensembl GTF file,  this awk one-liner will do the trick: `awk -F'\t' '{if ($3=="gene") {print $1,$4-1,$5,$3,$6,$7}}' Homo_sapiens.GRCh38.115.gtf | head`
 3. First use `head` to view the top 10 lines of the newly generated BED file.
 4. If the command works, send output to a file called `hg38_genes.bed`.
 5. Column 4 has the same value in every row and is not very useful. It will be better to have gene_id in this column but that requires learning some more `awk` tricks.
