@@ -50,14 +50,20 @@
 
 ## Meet AWK to extract specific information from large text (GTF) files
 1. Very often in genomic data analysis, you will need to extract rows or columns from a text file like a GTF file to make a new text file. One of the most common text file needed during analysis is a BED file. We will learn some tricks of a simple yet powerful new programming language called `awk`.
-2. To make a custom BED file of all genes in Ensembl GTF file,  this awk one-liner will do the trick: `awk -F'\t' '{if ($3=="gene") {print $1,$4-1,$5-1,$3,$6,$7}}' > hg38_genes.bed`
-3. Use `head` to view the top 10 lines of the newly generated BED file. Column 4 has the same value in every row and is not very useful. It will be better to have gene_id in this column but that requires learning some more `awk` tricks.
+2. To make a custom BED file of all genes in Ensembl GTF file,  this awk one-liner will do the trick: `awk -F'\t' '{if ($3=="gene") {print $1,$4-1,$5-1,$3,$6,$7}}' | head`
+3. First use `head` to view the top 10 lines of the newly generated BED file.
+4. If the command works, send output to a file called `hg38_genes.bed`.
+5. Column 4 has the same value in every row and is not very useful. It will be better to have gene_id in this column but that requires learning some more `awk` tricks.
 
 ## So what are all the types of genes annotated in the human genome
 1. Ensembl GTF file column 9 has a tag called "gene_biotype", which specifies various types of gene classes, e.g., protein coding, miRNA, etc.
-2. If we can select all the rows that have column 3 = gene and then extract gene_biotype value into a new column, then we can collapse, sort and count all possible gene_biotype values.
+2. If we can select all the rows that have column 3 = gene and then extract gene_biotype value into a new column.
 3. To do this, we want to learn how to extract specific information from rows and columns and save it in a new column.
-4. 
+4. Here is an `awk` command that will do what we said in step 2. Note that output is piped into `head` so that we can make sure the command works and produces an output we intend to: `awk -F'\t' '$3 == "gene" {match($9, /gene_biotype "([^"]+)";/); gene_biotype = substr($9, RSTART + 14, RLENGTH - 15); print $0 "\t" gene_biotype}' Homo_sapiens.GRCh38.115.gtf | head`
+5. We will break this up into pieces and examine what it does and why.
+6. Note that the gene_biotype has been added into a new column #10.
+
+### Exercise 2: Pipe the output of command in step 4 into `cut` to isolate column #10, and then use `sort` and `uniq` to collapse and count the number of gene_biotype features. Paste the screenshot and output of the final command and submit.
 
 
 
