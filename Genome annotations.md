@@ -43,7 +43,7 @@
 3. We will use `cat` to open data stream from a file. Then we will select particular column using `cut`.
 4. To summarize all gene features present in RefSeq GTF file, we can do this: `cat hg38.ncbiRefSeq.gtf | cut -f 3 | sort | uniq`
 5. These features can be counted by adding flag `-c` to `uniq`: `cat hg38.ncbiRefSeq.gtf | cut -f 3 | sort | uniq -c`
-6. To limit our summary or counting to a particular chr, say chr22, we can also add column 1 and then `grep` for chr22. Modify the command in step 5: `cat hg38.ncbiRefSeq.gtf | cut -f 1,3 | grep -w 'chr22' | sort | uniq -c`
+6. To limit our summary or counting to a particular chr, say chr22, we can also add column 1 and then `grep` for chr22. Modify the command in step 5: `cat hg38.ncbiRefSeq.gtf | cut -f 1,3 | grep -w 'chr22' | cut -f 2 | sort | uniq -c`
 7. So, how many transcripts on chr22?
 
 ### Exercise 1: Ensembl GTF file column 3 also has entries for "gene" (missing in RefSeq GTF). Write a command to summarize and count all features including genes in the entire Ensembl GTF file and on chr22. Note the difference in how chromosome numbers are listed in column 1 of the Ensembl GTF file. So, how many genes are in the Ensembl GTF? And how many on chr22?
