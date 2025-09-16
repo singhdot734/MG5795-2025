@@ -48,6 +48,7 @@
 
 ### Exercise 1: Ensembl GTF file column 3 also has entries for "gene" (missing in RefSeq GTF). Write a command to summarize and count all features including genes in the entire Ensembl GTF file and on chr22. Note the difference in how chromosome numbers are listed in column 1 of the Ensembl GTF file. So, how many genes are in the Ensembl GTF? And how many on chr22?
 
+# Class 7
 ## Meet AWK to extract specific information from large text (GTF) files
 1. Very often in genomic data analysis, you will need to extract rows or columns from a text file like a GTF file to make a new text file. One of the most common text file needed during analysis is a BED file. We will learn some tricks of a simple yet powerful new programming language called `awk`.
 2. To make a custom BED file of all genes in Ensembl GTF file,  this awk one-liner will do the trick: `awk -F'\t' '{if ($3=="gene") {print $1,$4-1,$5,$3,$6,$7}}' Homo_sapiens.GRCh38.115.gtf | head`
@@ -59,11 +60,23 @@
 1. Ensembl GTF file column 9 has a tag called "gene_biotype", which specifies various types of gene classes, e.g., protein coding, miRNA, etc.
 2. If we can select all the rows that have column 3 = gene and then extract gene_biotype value into a new column.
 3. To do this, we want to learn how to extract specific information from rows and columns and save it in a new column.
-4. Here is an `awk` command that will do what we said in step 2. Note that output is piped into `head` so that we can make sure the command works and produces an output we intend to: `awk -F'\t' '$3 == "gene" {match($9, /gene_biotype "([^"]+)";/); gene_biotype = substr($9, RSTART + 14, RLENGTH - 15); print $0 "\t" gene_biotype}' Homo_sapiens.GRCh38.115.gtf | head`
+4. Here is an `awk` command that will do what we said in step 2. Note that output is piped into `head` so that we can make sure the command works and produces an output we intend to: `awk -F'\t' '$3 == "gene" {match($9, /gene_biotype "([^"]+)"/, biotype); print $0 "\t" biotype[1];}' Homo_sapiens.GRCh38.115.gtf | head`
 5. We will break this up into pieces and examine what it does and why.
 6. Note that the gene_biotype has been added into a new column #10.
+7. Save the output of command in step 4 to a new file `> hg38.115.biotype.gtf`
 
-### Exercise 2: Pipe the output of command in step 4 into `cut` to isolate column #10, and then use `sort` and `uniq` to collapse and count the number of gene_biotype features. Paste the screenshot and output of the final command and submit.
+### Exercise 1: Pipe the output of command in step 4 into `cut` to isolate column #10, and then use `sort` and `uniq` to collapse and count the number of gene_biotype features. Paste the screenshot and output of the final command and submit.
 
-
-
+## Creating a custom BED file with exon-intron junction (5'-splice site) and intron-exon junction (3'-splice site) coordinates for chr22 exons.
+1. We want to create two BED files, one that has 10 bp region at exon-intron junction (this will contain 5'-splice site) and another with 10 bp region at intron-exon junction (this will contain 3'-splice site). We also want to limit this to exons from protein coding genes from chr22.
+2. We will do this in four steps.
+3. The Ensembl GTF file has the information we need: exon is a feature in column 3; for the rows where column 3 is exon, exon start and end are in columns 4 and 5; column 9 has exon id and gene_biotype.
+4. First, we will first extract exon id and gene_biotype into new columns as in the previous exercise. `awk -F'\t' '{match($9, /gene_biotype "([^"]+)"/, biotype); match ($9, /exon_id "([^"]+)"/, exon); print $0 "\t" biotype[1] "\t" exon[1];}' Homo_sapiens.GRCh38.115.gtf > hg38.115.biotype.exon.gtf`
+5. Check the output file using `head`
+6. Second, we will create a BED file where we will limit to chr22 exons using columns 1 and 3 of the new GTF file from step 4 above, and print the columns in the order required by the BED file format. It will be done using: `awk -F'\t' '$1 == "22" && $3 == "exon" && $10 == "protein_coding" {chrom = $1; start = $4 - 1; end = $5; name = $11; score = "."; strand = $7; print chrom "\t" start "\t" end "\t" name "\t" score "\t" strand;}' hg38.115.biotype.exon.gtf > chr22_protein_coding_exons.bed`
+7. The BED file in the previous step has exon start and end as defined in the GTF file.
+8. Third, we will create a custom BED files for 10 bp region spanning 5'-splice site: `awk -F'\t' '{if ($6=="+") {print $1 "\t" $3-2 "\t" $3+8 "\t" $4 "\t" $5 "\t" $6}}' chr22_protein_coding_exons.bed > chr22_pc_exon5ss.bed`
+9. Fourth, we will create a custom BED file for 10 bp region spanning 3'-splice site: `awk -F'\t' '{if ($6=="+") {print $1 "\t" $2-8 "\t" $2+2 "\t" $4 "\t" $5 "\t" $6}}' chr22_protein_coding_exons.bed > chr22_pc_exon3ss.bed`
+10. View the files using `head` and download them to your computer.
+11. Upload each file into the MEME suite for discovery of sequence motifs in these regions.
+12. Do the sequence motifs match the 5'-splice site and 3'-splice site sequences shown in a textbook?
