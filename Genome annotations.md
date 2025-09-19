@@ -67,11 +67,12 @@
 
 ### Exercise 1: Pipe the output of command in step 4 into `cut` to isolate column #10, and then use `sort` and `uniq` to collapse and count the number of gene_biotype features. Paste the screenshot and output of the final command and submit.
 
+# Class 8
 ## Creating a custom BED file with exon-intron junction (5'-splice site) and intron-exon junction (3'-splice site) coordinates for chr22 exons.
 1. We want to create two BED files, one that has 10 bp region at exon-intron junction (this will contain 5'-splice site) and another with 10 bp region at intron-exon junction (this will contain 3'-splice site). We also want to limit this to exons from protein coding genes from chr22.
 2. We will do this in four steps.
 3. The Ensembl GTF file has the information we need: exon is a feature in column 3; for the rows where column 3 is exon, exon start and end are in columns 4 and 5; column 9 has exon id and gene_biotype.
-4. First, we will first extract exon id and gene_biotype into new columns as in the previous exercise. `awk -F'\t' '{match($9, /gene_biotype "([^"]+)"/, biotype); match ($9, /exon_id "([^"]+)"/, exon); print $0 "\t" biotype[1] "\t" exon[1];}' Homo_sapiens.GRCh38.115.gtf > hg38.115.biotype.exon.gtf`
+4. First, we will extract exon id and gene_biotype into new columns as in the previous exercise. `awk -F'\t' '{match($9, /gene_biotype "([^"]+)"/, biotype); match ($9, /exon_id "([^"]+)"/, exon); print $0 "\t" biotype[1] "\t" exon[1];}' Homo_sapiens.GRCh38.115.gtf > hg38.115.biotype.exon.gtf`
 5. Check the output file using `head`
 6. Second, we will create a BED file where we will limit to chr22 exons using columns 1 and 3 of the new GTF file from step 4 above, and print the columns in the order required by the BED file format. It will be done using: `awk -F'\t' '$1 == "22" && $3 == "exon" && $10 == "protein_coding" {chrom = $1; start = $4 - 1; end = $5; name = $11; score = "."; strand = $7; print chrom "\t" start "\t" end "\t" name "\t" score "\t" strand;}' hg38.115.biotype.exon.gtf > chr22_protein_coding_exons.bed`
 7. The BED file in the previous step has exon start and end as defined in the GTF file.
