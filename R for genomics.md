@@ -213,8 +213,6 @@ data3_clean <- data3 %>%
     mRNA_length_mane = as.numeric(mRNA_length_mane) # change mode
   )
 
-data3_clean %>% count(mRNA_length_mane)
-
 # Changing mode of additional numeric columns
 data3_clean <- data3 %>%
   mutate(
@@ -254,7 +252,7 @@ ggplot(data3_clean, aes(x = log10(mRNA_length_mane), y = log10(Protein_length_ma
   )
 
 # Create scatter plot with a linear regression line
-ggplot(data3_clean, aes(x = mRNA_length_mane, y = Protein_length_mane)) +
+ggplot(data3_clean, aes(x = log10(mRNA_length_mane), y = log10(Protein_length_mane)) +
   geom_point(color = "red", alpha = 0.6) +
   geom_smooth(method = "lm", se = TRUE) + # Add linear regression line (lm) with confidence interval (se = TRUE)
   labs(
@@ -274,7 +272,6 @@ ggplot(data3_clean, aes(x = Loc, y = Exon_number_mane)) +
        x = "Location",
        y = "Exon Number") +
   theme_minimal() # this will make a boxplot (or any other geom object without background)
-
 
 # Select certain columns
 select(data3_clean, mRNA_length_mane, Protein_length_mane) #select(which_df, col_1, col_2)
