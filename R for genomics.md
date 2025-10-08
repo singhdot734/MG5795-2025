@@ -148,3 +148,138 @@ ggplot(data2, aes(x = log10(Gene_Length), fill = Strand)) +
   scale_fill_manual(values = c("blue", "red"))
 
 ```
+# R - class 3
+
+```
+# Class 3
+setwd("~/materials")
+library(ggplot2) # libraries (this one and any other) have to be loaded in every session
+
+# Read the data and give column names
+data2 <- read.table("pc_genes_len.bed", header = FALSE, sep = "\t",
+                    col.names = c("ENSG_ID", "Gene_Length", "Strand"))
+
+# ggplot usage
+# ggplot(data = <DATA>, mapping = aes(<MAPPINGS>)) +  <GEOM_FUNCTION>()
+
+# Create histogram
+ggplot(data2, aes(x = log10(Gene_Length), fill = Strand)) + # map x variable to the aesthetics function of ggplot
+  geom_histogram()
+
+# Modify histogram to not stack the bars
+ggplot(data2, aes(x = log10(Gene_Length), fill = Strand)) + # assign x variable to the aesthetics function of ggplot
+  geom_histogram(position = "identity")
+
+# Make histograms more transparent
+ggplot(data2, aes(x = log10(Gene_Length), fill = Strand)) + # assign x variable to the aesthetics function of ggplot
+  geom_histogram(position = "identity", alpha = 0.6)
+
+# Add labels to histogram and custom color
+ggplot(data2, aes(x = log10(Gene_Length), fill = Strand)) + #assign x variable to the aesthetics function of ggplot
+  geom_histogram(position = "identity", alpha = 0.6) +
+  labs(title = "Histogram of Gene Lengths by Strand",
+       x = "Gene Length",
+       y = "Count") +
+  scale_fill_manual(values = c("purple", "darkgreen")) # add color to two strand vectors
+
+# Create density plot
+ggplot(data2, aes(x = log10(Gene_Length), fill = Strand)) +
+  geom_density(alpha = 0.1) +
+  labs(title = "Histogram of Gene Lengths by Strand",
+       x = "Gene Length",
+       y = "Count") +
+  scale_fill_manual(values = c("blue", "red"))
+
+# Load dplyr and readr packages to use tidy data formats
+
+library(dplyr)
+library(readr)
+library(tidyr)
+
+# Read data using read_csv()
+data3 <- read_csv("Horste_S1_mod.csv")
+
+# glimpse() to see the structure of data
+glimpse(data3)
+
+# mode = dbl signifies "double-precision" numeric vector
+
+# Introducing Pipe - %>% - and count()
+data3 %>% count(Loc) # this works like "cut -f n | sort | uniq -c" on command line
+
+# Changing mode of a column using mutate()
+data3_clean <- data3 %>%
+  mutate(
+    mRNA_length_mane = as.numeric(mRNA_length_mane) # change mode
+  )
+
+data3_clean %>% count(mRNA_length_mane)
+
+# Changing mode of additional numeric columns
+data3_clean <- data3 %>%
+  mutate(
+    mRNA_length_mane = as.numeric(mRNA_length_mane), # change mode
+    Protein_length_mane = as.numeric(Protein_length_mane), # change mode
+    Exon_number_mane = as.numeric(Exon_number_mane), # change mode
+    av_CDS_exon_length_mane = as.numeric(av_CDS_exon_length_mane) # change mode
+  )
+
+glimpse(data3_clean)
+
+# How many variables are for mRNA localization score (Loc)?
+data3_clean %>% count(Loc)
+
+# Let's say we want to test if there is a relationship between mRNA length and protein length.
+
+# Create scatter plot
+ggplot(data3_clean, aes(x = mRNA_length_mane, y = Protein_length_mane)) + # map the x and y variables to ggplot aesthetics
+  geom_point() # makes a basic scatter plot
+    
+# Customize the scatter plot
+ggplot(data3_clean, aes(x = mRNA_length_mane, y = Protein_length_mane)) +
+  geom_point(color = "blue", alpha = 0.6) +
+  labs(
+    title = "Scatter Plot of mRNA Length vs Protein length",
+    x = "mRNA length",
+    y = "Protein length"
+  )
+
+# Create scatter plot with log10
+ggplot(data3_clean, aes(x = log10(mRNA_length_mane), y = log10(Protein_length_mane))) +
+  geom_point(color = "lightblue", alpha = 0.6) +
+  labs(
+    title = "Scatter Plot of mRNA Length vs Protein length",
+    x = "mRNA length",
+    y = "Protein length"
+  )
+
+# Create scatter plot with a linear regression line
+ggplot(data3_clean, aes(x = mRNA_length_mane, y = Protein_length_mane)) +
+  geom_point(color = "red", alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE) + # Add linear regression line (lm) with confidence interval (se = TRUE)
+  labs(
+    title = "Scatter Plot of mRNA Length vs Protein length",
+    x = "mRNA Length",
+    y = "Protein length"
+  )
+
+# Let's see if there is any relationship between exon number and mRNA localization
+ggplot(data3_clean, aes(x = Loc, y = Exon_number_mane)) +
+  geom_boxplot()
+
+# Customize the box plot
+ggplot(data3_clean, aes(x = Loc, y = Exon_number_mane)) +
+  geom_boxplot(fill = "skyblue", color = "darkblue") +
+  labs(title = "Exon number vs mRNA localization",
+       x = "Location",
+       y = "Exon Number") +
+  theme_minimal() # this will make a boxplot (or any other geom object without background)
+
+
+# Select certain columns
+select(data3_clean, mRNA_length_mane, Protein_length_mane) #select(which_df, col_1, col_2)
+
+# filter rows
+filter(data3_clean, Loc == "ER") #filter(which_df, col == row_value)
+
+```
