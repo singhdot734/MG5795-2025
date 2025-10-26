@@ -1,12 +1,12 @@
 # RNA-Seq analysis
  
 ## Step 1: Downloading data
-Load sratoolkit
-`module load sratoolkit/3.0.2`
-The following command will download data from a SRA run ID into the same directory where the command will be issued from. 
-`fasterq-dump --split-files <SRR#>` 
-Replace `<SRR#>` with the SRA Run ID to be downloaded.
-The --split-files option ensures the R1 and R2 files are separate for paired end data.
+1. Load sratoolkit
+2. `module load sratoolkit/3.0.2`
+3. The following command will download data from a SRA run ID into the same directory where the command will be issued from:
+4. `fasterq-dump --split-files <SRR#>`
+5. Replace `<SRR#>` with the SRA Run ID to be downloaded.
+6. The --split-files option ensures the R1 and R2 files are separate for paired end data.
 
 ## Step 2: Trimming adapters
 Adapaters to be trimmed will need to be provided in fasta format. 
