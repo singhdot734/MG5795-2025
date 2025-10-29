@@ -67,6 +67,7 @@ STAR \
 6. In the above file, absolute paths are provided for the variables `genome_index`, `R1_fq` and `R2_fq`. Replace these paths as needed where your files are stored.
 7. Run the job submission script `sbatch <my_star_alignment_script.sh>`
 8. To check the progress of your job: `squeue -u <your username>` or `squeue --job <JOBID>`
+9. For more information on STAR alignment, consult the manual: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
 
 ## Step IV: Gene counts table
 1. To perform differential expression analysis, first step is to create a gene counts table. As the dataset we are working with is likely unstranded, we will use the unstranded counts in the `_ReadsPerGene.out.tab` files from the `--quantMode GeneCounts` output from STAR alignment.
