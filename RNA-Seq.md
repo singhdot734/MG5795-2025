@@ -31,6 +31,7 @@ AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
 10. As no path is given for each input and output file, the above script assumes input files are in the same directory where the above command is issued.
 11. The `adapters.fa` file also has to be in this directory.
 12. Output files will also be in this directory.
+13. See trimmomatic manual for more details for options, as needed: https://github.com/usadellab/Trimmomatic
 
 ## Step III: Alignment
 1. Following items will be needed to do the alignment:
