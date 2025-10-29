@@ -243,4 +243,3 @@ condition_results_with_names = merge(gene_id_table, as.data.frame(condition_resu
 #save the results to a file
 write.csv(condition_results_with_names, "siC_vs_siLARP4B_results.csv", row.names = FALSE)
 ```
-
