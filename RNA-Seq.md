@@ -69,7 +69,24 @@ STAR \
 8. To check the progress of your job: `squeue -u <your username>` or `squeue --job <JOBID>`
 9. For more information on STAR alignment, consult the manual: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
 
-## Step IV: Gene counts table
+## Step IV: Creating bam files and visualization
+1. Use samtools to convert sam file into sorted bam file.
+```
+module load samtools/1.21
+samtools view -b -o pc3_siC_1_unsorted.bam pc3_siC_1_align_Aligned.out.sam
+samtools sort -o pc3_siC_1_sorted.bam pc3_siC_1_unsorted.bam
+```
+2. Subset the sorted bam file, in this case to capture only chr20 alignments, and save as sam file.
+3. Convert back to bam, sort and index. 
+``` 
+samtools view -h pc3_siC_1_sorted.bam chr20 > pc3_siC_1_sorted.chr20.sam
+samtools view -b pc3_siC_2_sorted.chr20.sam > pc3_siC_2_sorted.chr20.bam
+samtools sort -o pc3_siC_2_sorted.chr20.bam pc3_siC_2_sorted.chr20.bam # this step may not be needed.
+samtools index pc3_siC_2_sorted.chr20.bam
+```
+4. The bam and corresponding bam.bai can be uploaded to IGV.
+
+## Step V: Creating gene counts table
 1. To perform differential expression analysis, first step is to create a gene counts table. As the dataset we are working with is likely unstranded, we will use the unstranded counts in the `_ReadsPerGene.out.tab` files from the `--quantMode GeneCounts` output from STAR alignment.
 2. Start an R Studio app in the OSC classroom.
 3. The following script will make a counts table in a format that can be used for differential expression analysis using DESeq2.
@@ -161,7 +178,7 @@ ggplot(count_table_filtered, aes(x = log10(pc3_si4B_1), y = log10(pc3_si4B_2))) 
   )
 ```
 
-## Step V: DESeq2
+## Step VI: DESeq2
 1. The steps below will run DESeq2 algorithm for differential expression analysis between the control and LARP4B knockdown samples.
 2. In a new R script file, paste the following code: 
 
