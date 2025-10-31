@@ -1,4 +1,5 @@
 # RNA-Seq analysis
+As all tools needed from OSC for this analysis are available only in the Ascend cluster, all command line tasks should be done on this cluster (Trimmomatic is available only on this cluster). To connect to this cluster from the OnDemand dashboard, click the arrow to the right of "Open in terminal" button and choose "Ascend" from the list of three clusters.
  
 ## Step I: Downloading data
 1. Load sratoolkit `module load sratoolkit/3.0.2`
@@ -19,19 +20,20 @@ AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
 ```
 6. If there are any other adapters used in samples, add their name and sequence on new lines in fasta format.
 7. Save the file.
-8. The following trimmomatic script can be used to trim adapters these adapters from paired-end samples.
+8. Load trimmomatic in your environment: `module load trimmomatic/0.38`
+9. The following trimmomatic script can be used to trim adapters these adapters from paired-end samples.
 
 ```
   trimmomatic PE \
-  SRR#_R1.fastq SRR#_R2.fastq \ #these are the two paired-end input fastq files 
-  SRR#_paired_F.fastq SRR#_unpaired_F.fastq SRR#_paired_R.fastq SRR#_unpaired_R.fastq \ #these are four ouput fastq files
+  SRR#_R1.fastq SRR#_R2.fastq \ 
+  SRR#_paired_F.fastq SRR#_unpaired_F.fastq SRR#_paired_R.fastq SRR#_unpaired_R.fastq \
   ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:18 
 ```
-9. Replace `SRR#` with file name of the input and output fasta file names.
-10. As no path is given for each input and output file, the above script assumes input files are in the same directory where the above command is issued.
-11. The `adapters.fa` file also has to be in this directory.
-12. Output files will also be in this directory.
-13. See trimmomatic manual for more details for options, as needed: https://github.com/usadellab/Trimmomatic
+10. Replace `SRR#` with file name of the input and output fasta file names.
+11. As no path is given for each input and output file, the above script assumes input files (line 2 above) are in the same directory where the above command is issued. Output fastq files are on line 3.
+12. The `adapters.fa` file also has to be in this directory.
+13. Output files will also be in this directory.
+14. See trimmomatic manual for more details for options, as needed: https://github.com/usadellab/Trimmomatic
 
 ## Step III: Alignment
 1. Following items will be needed to do the alignment:
@@ -53,9 +55,9 @@ AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
 module load star/2.7.10b
 
 genome_index=/fs/ess/PAS3124/MOLGEN_5795_OSU/materials/STAR_index/GRCh38_gencode48_index_STAR_v2_7_11b
-R1_fq=/fs/ess/PAS3124/MOLGEN_5795_OSU/materials/GSE222467/trimmed_data/pc3_siC_1_100k_pf.fastq
-R2_fq=/fs/ess/PAS3124/MOLGEN_5795_OSU/materials/GSE222467/trimmed_data/pc3_siC_1_100k_pr.fastq
-out_prefix=pc3_siC_1_100k_align_
+R1_fq=/fs/ess/PAS3124/MOLGEN_5795_OSU/path_to/<sample_id>_paired_F.fastq
+R2_fq=/fs/ess/PAS3124/MOLGEN_5795_OSU/path_to/<sample_id>_paired_R.fastq
+out_prefix=<sample_id>_
 
 STAR \
     --readFilesIn $R1_fq $R2_fq \
@@ -64,25 +66,26 @@ STAR \
     --runThreadN 8 \
     --quantMode GeneCounts
 ```
-6. In the above file, absolute paths are provided for the variables `genome_index`, `R1_fq` and `R2_fq`. Replace these paths as needed where your files are stored.
-7. Run the job submission script `sbatch <my_star_alignment_script.sh>`
+6. In the above file, absolute paths are provided for the variables `genome_index`, `R1_fq` and `R2_fq`. Replace these paths as needed where your files are stored. Also make sure to update <sample_id> where ever needed in the script.
+7. Run the job submission script `sbatch <path_to/my_star_alignment_script.sh>`
 8. To check the progress of your job: `squeue -u <your username>` or `squeue --job <JOBID>`
-9. For more information on STAR alignment, consult the manual: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+9. Output files will come into the directory where the sbatch command is run from.
+10. For more information on STAR alignment, consult the manual: https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
 
 ## Step IV: Creating bam files and visualization
 1. Use samtools to convert sam file into sorted bam file.
 ```
 module load samtools/1.21
-samtools view -b -o pc3_siC_1_unsorted.bam pc3_siC_1_align_Aligned.out.sam
-samtools sort -o pc3_siC_1_sorted.bam pc3_siC_1_unsorted.bam
+samtools view -b -o <sample_id>_unsorted.bam <sample_id>_Aligned.out.sam
+samtools sort -o <sample_id>_sorted.bam <sample_id>_unsorted.bam
 ```
 2. Subset the sorted bam file, in this case to capture only chr20 alignments, and save as sam file.
 3. Convert back to bam, sort and index. 
 ``` 
-samtools view -h pc3_siC_1_sorted.bam chr20 > pc3_siC_1_sorted.chr20.sam
-samtools view -b pc3_siC_2_sorted.chr20.sam > pc3_siC_2_sorted.chr20.bam
-samtools sort -o pc3_siC_2_sorted.chr20.bam pc3_siC_2_sorted.chr20.bam # this step may not be needed.
-samtools index pc3_siC_2_sorted.chr20.bam
+samtools view -h <sample_id>_sorted.bam chr20 > <sample_id>_sorted.chr20.sam
+samtools view -b <sample_id>_sorted.chr20.sam > <sample_id>_sorted.chr20.bam
+samtools sort -o <sample_id>_sorted.chr20.bam <sample_id>_sorted.chr20.bam # this step may not be needed.
+samtools index <sample_id>_sorted.chr20.bam
 ```
 4. The bam and corresponding bam.bai can be uploaded to IGV.
 
@@ -202,7 +205,7 @@ count_table_filtered = count_table[gene_passes_filter, ]
 metadata = data.frame("condition" = c("ctrl", "ctrl", "kd", "kd"))
 rownames(metadata) = colnames(count_table_filtered)
 
-# turn condition column of metadata into a factor; to prevent a warning
+# turn condition column of metadata into a factor; this is just done to prevent a warning
 metadata$condition = factor(metadata$condition)
 
 #create DESeqDataSet Object
@@ -210,11 +213,10 @@ DE_dataset = DESeqDataSetFromMatrix(countData = count_table_filtered,
                                     colData = metadata,
                                     design = ~ condition)
 
-# Make a PCA plot
-# first do variance stabilizing transformation
+# Perform variance stabilizing transformation
 vst = varianceStabilizingTransformation(DE_dataset)
 
-# Now plot PCA
+# Plot PCA
 plotPCA(vst)
 
 # Set control knockdown as reference level
