@@ -186,12 +186,14 @@ ggplot(count_table_filtered, aes(x = log10(pc3_si4B_1), y = log10(pc3_si4B_2))) 
 2. In a new R script file, paste the following code: 
 
 ```
+# DESeq2 analysis
+
 setwd("~/materials")
 
 library("DESeq2")
 library("biomaRt")
 
-#read in count table generated in step IV above.
+#read in count table
 count_table = read.csv("pc3_siC_si4B_count_table.csv",
                        row.names = 1)
 
@@ -205,7 +207,7 @@ count_table_filtered = count_table[gene_passes_filter, ]
 metadata = data.frame("condition" = c("ctrl", "ctrl", "kd", "kd"))
 rownames(metadata) = colnames(count_table_filtered)
 
-# turn condition column of metadata into a factor; this is just done to prevent a warning
+# turn condition column of metadata into a factor
 metadata$condition = factor(metadata$condition)
 
 #create DESeqDataSet Object
@@ -213,10 +215,11 @@ DE_dataset = DESeqDataSetFromMatrix(countData = count_table_filtered,
                                     colData = metadata,
                                     design = ~ condition)
 
-# Perform variance stabilizing transformation
+# Make a PCA plot
+# first do variance stabilizing transformation
 vst = varianceStabilizingTransformation(DE_dataset)
 
-# Plot PCA
+# Now plot PCA
 plotPCA(vst)
 
 # Set control knockdown as reference level
@@ -262,4 +265,51 @@ condition_results_with_names = merge(gene_id_table, as.data.frame(condition_resu
 
 #save the results to a file
 write.csv(condition_results_with_names, "siC_vs_siLARP4B_results.csv", row.names = FALSE)
+```
+3. Next, the DESeq2 output results csv will be used to understand the type of effect LARP4B has on gene expression.
+4. The block of code below will generate a volcano plot of differentially expressed genes and will output lists of such genes for GO term analysis.
+```
+# Analysis of DESeq2 results
+
+setwd("~/materials")
+
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(tidyr)
+
+LARP4B_DEseq <- read_csv("siC_vs_siLARP4B_results.csv")
+
+glimpse(LARP4B_DEseq)
+
+# Select certain columns and get summary
+log2fc <- select(LARP4B_DEseq, log2FoldChange) 
+summary(log2fc)
+
+# Create a new column for 2-fold significance
+LARP4B_DEseq$sig_2f <- with(LARP4B_DEseq, ifelse(log2FoldChange > 1 & padj < 0.05, "Up",
+                                                       ifelse(log2FoldChange < -1 & padj < 0.05, "Down", "Not significant")))
+
+# Volcano Plot 1 (2-fold change)
+ggplot(LARP4B_DEseq, aes(x = log2FoldChange, y = -log10(padj), color = sig_2f)) +
+  geom_point(alpha = 0.6) +
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed", color = "grey") +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed", color = "grey") +
+  scale_color_manual(values = c("Up" = "red", "Down" = "blue", "Not significant" = "black")) +
+  labs(title = "LARP4B vs Control KD (2-fold change)", x = "Log2 Fold Change", y = "-log10(Adjusted P-value)") +
+  theme_minimal()
+
+# Next we will make a list of genes that go significantly up and down. But first remove rows where hgnc_symbol is NA
+LARP4B_DEseq <- subset(LARP4B_DEseq, !is.na(hgnc_symbol))
+
+# Subset for Up-regulated genes
+up_genes <- subset(LARP4B_DEseq, significance == "Up")
+
+# Subset for Down-regulated genes
+down_genes <- subset(LARP4B_DEseq, significance == "Down")
+
+# Write to CSV (only hgnc_symbol column)
+write.csv(up_genes$hgnc_symbol, "up_genes.csv", row.names = FALSE)
+write.csv(down_genes$hgnc_symbol, "down_genes.csv", row.names = FALSE)
+write.csv(LARP4B_DEseq$hgnc_symbol, "all_genes.csv", row.names = FALSE)
 ```
