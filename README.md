@@ -4,7 +4,7 @@
 cd ~  
 ln -s /fs/ess/PAS3124/ MG5795  
 cd MG5795  
-ls -l MG5795  
+ls -l  
 ```
 
 #### Enter the shared class folder and create your own folder
@@ -15,8 +15,8 @@ mkdir name.# (your OSU ID)
 cd name.# (your OSU ID)  
 ```
 
-#### Clone the course folder to your local
-The folder MG5795-2025 included in your name.# folder will be the place you practice and run things
+#### Clone the course folder to your folder
+The cloned folder will be the place you practice and run things
 ```
 cd ~/MG5795/class/name.# (your OSU ID)  
 git clone https://github.com/singhdot734/MG5795-2025.git  
