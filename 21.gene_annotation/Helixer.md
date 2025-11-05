@@ -1,15 +1,15 @@
 ## Using Deep Learning for ab initio gene predictions
 
-### Helixer GitHub ###
+#### Helixer GitHub ###
 This is the original Helixer that includes model training and prediction  
 https://github.com/usadellab/Helixer  
 https://github.com/gglyptodon/helixer-docker  
 
-### HelixerLite GitHub ###
+#### HelixerLite GitHub ###
 This is a lightweight and easy-to-install Helixer that only includes model prediction  
 https://github.com/nextgenusfs/helixerlite  
 
-### Install HelixerLite ###
+#### Install HelixerLite ###
 ```
 conda activate mapping
 python -m pip install helixerlite
