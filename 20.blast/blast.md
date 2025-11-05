@@ -14,14 +14,10 @@ blastn -h
 blastn -help
 ```
 
-#### Create a folder called "blast" in your directory
+#### Create a softlink of the genome
 Enter your course folder; name.# is your OSU ID
 ```
 cd ~/MG5795/class/name.#/MG5795-2025/20.blast
-```
-
-#### Create a softlink of the genome
-```
 ln -s ~/MG5795/class/data/Rice_AGIS1.fasta  
 less Rice_AGIS1.fasta  
 ```
