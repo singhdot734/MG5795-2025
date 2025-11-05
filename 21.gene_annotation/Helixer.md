@@ -11,8 +11,7 @@ https://github.com/nextgenusfs/helixerlite
 
 ### Install HelixerLite ###
 ```
-conda create -n helixer python=3.10  
-conda activate helixer  
+conda activate mapping
 python -m pip install helixerlite
 ```
 
