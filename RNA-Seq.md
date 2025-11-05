@@ -37,7 +37,7 @@ AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
 
 ## Step III: Alignment
 1. Following items will be needed to do the alignment:
-   a. Genome index (STAR index), which is in this directory: /fs/ess/PAS3124/MOLGEN_5795_OSU/materials/STAR_index/GRCh38_gencode48_index_STAR_v2_7_11b
+   a. Genome index (STAR index), which is in this directory: /fs/ess/PAS3124/data/STAR_index/GRCh38_gencode48_index_STAR_v2_7_11b
    b. Trimmed fastq files
    c. A shell bash script to submit/queue the alignment job OSC compute nodes. This script is below.
 2. To create a SBATCH script in OnDemand, do as follows:
@@ -54,7 +54,7 @@ AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
 
 module load star/2.7.10b
 
-genome_index=/fs/ess/PAS3124/MOLGEN_5795_OSU/materials/STAR_index/GRCh38_gencode48_index_STAR_v2_7_11b
+genome_index=/fs/ess/PAS3124/data/STAR_index/GRCh38_gencode48_index_STAR_v2_7_11b
 R1_fq=/fs/ess/PAS3124/MOLGEN_5795_OSU/path_to/<sample_id>_paired_F.fastq
 R2_fq=/fs/ess/PAS3124/MOLGEN_5795_OSU/path_to/<sample_id>_paired_R.fastq
 out_prefix=<sample_id>_
