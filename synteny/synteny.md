@@ -2,6 +2,12 @@
 For liftover: https://github.com/lh3/miniprot  
 For synteny: https://github.com/tanghaibao/jcvi/wiki/Mcscan-(python-version)
 
+
+### Initiate interactive job.
+```
+sinteractive -A <PAS2387> -c 48 -t 0:30:00
+```
+
 ### Create and activate the environment.
 ```
 mamba env create -f Genomic-Data-Analysis/synteny/synteny.yml 
@@ -31,7 +37,7 @@ wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/735/GCF_000001735.4_TA
 ### Run the syntenic analysis.
 ```
 # Get colinear 1:1 orthologous blocks. 
-python synLTR/module1.py --genomes *fa --threads 50 --dir_name results --protein_fa Athal.pep --miniprot_outn 5 --script_dir synLTR/module1/
+python synLTR/module1.py --genomes *fa --threads 48 --dir_name results --protein_fa Athal.pep --miniprot_outn 5 --script_dir synLTR/module1/
 ```
 
 # View results.
