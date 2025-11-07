@@ -24,7 +24,6 @@ pip install -r helixer_pip.yml
 helixerlite -h
 ```
 
-### Annotate Maize sequences with different models ###
 #### 1. request compute resources ####
 ```
 sinteractive -A PAS3124 -n 48 -t 1:00:00
@@ -34,12 +33,28 @@ sinteractive -A PAS3124 -n 48 -t 1:00:00
 ```
 cd ~/MG5645/name.#/MG5795-2025  
 git pull  
+cd 21.gene_annotation
 ```
 
-#### 3. use HelixerLite to predict genes using varying models ####
+#### Install HelixerLite ###
+```
+# set up the base environment
+module load miniconda3/24.1.2-py310
+conda env create -f helixer.yml
+conda activate helixer
+
+# install with either way
+python -m pip install helixerlite
+pip install -r helixer_pip.yml
+
+# test if you have helixerlite installed
+helixerlite -h
+```
+
+
+### Annotate Maize sequences with different models ###
 ```
 conda activate helixer
-cd 21.gene_annotation
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage land_plant --out B73_chr2_5M.land_plant.output.gff3 -c 30 &  
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage fungi --out B73_chr2_5M.fungi.output.gff3 -c 30 &  
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage vertebrate --out B73_chr2_5M.vertebrate.output.gff3 -c 30 &  
