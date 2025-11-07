@@ -12,8 +12,9 @@ https://github.com/nextgenusfs/helixerlite
 #### Install HelixerLite ###
 ```
 module load miniconda3/24.1.2-py310 
-conda activate mapping
-python -m pip install helixerlite
+conda env create -f helixer.yml
+#conda activate mapping
+#python -m pip install helixerlite
 helixerlite -h
 ```
 
