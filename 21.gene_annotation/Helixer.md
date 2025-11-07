@@ -11,10 +11,16 @@ https://github.com/nextgenusfs/helixerlite
 
 #### Install HelixerLite ###
 ```
+# set up the base environment
 module load miniconda3/24.1.2-py310 
 conda env create -f helixer.yml
 conda activate helixer
+
+# install with either way
 python -m pip install helixerlite
+pip install -r helixer_pip.yml
+
+# test if you have helixerlite installed
 helixerlite -h
 ```
 
@@ -32,7 +38,7 @@ git pull
 
 #### 3. use HelixerLite to predict genes using varying models ####
 ```
-conda activate mapping
+conda activate helixer
 cd 21.gene_annotation
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage land_plant --out B73_chr2_5M.land_plant.output.gff3 -c 30 &  
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage fungi --out B73_chr2_5M.fungi.output.gff3 -c 30 &  
