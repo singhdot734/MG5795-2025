@@ -9,34 +9,20 @@ https://github.com/gglyptodon/helixer-docker
 This is a lightweight and easy-to-install Helixer that only includes model prediction  
 https://github.com/nextgenusfs/helixerlite  
 
-#### Install HelixerLite ###
-```
-# set up the base environment
-module load miniconda3/24.1.2-py310 
-conda env create -f helixer.yml
-conda activate helixer
-
-# install with either way
-python -m pip install helixerlite
-pip install -r helixer_pip.yml
-
-# test if you have helixerlite installed
-helixerlite -h
-```
-
-#### 1. request compute resources ####
+### Set up the tool ###
+#### 1. Request compute resources ####
 ```
 sinteractive -A PAS3124 -n 48 -t 1:00:00
 ```
 
-#### 2. update your course folder
+#### 2. Update your course folder
 ```
 cd ~/MG5645/name.#/MG5795-2025  
 git pull  
 cd 21.gene_annotation
 ```
 
-#### Install HelixerLite ###
+#### 3. Install HelixerLite ###
 ```
 # set up the base environment
 module load miniconda3/24.1.2-py310
@@ -50,7 +36,6 @@ pip install -r helixer_pip.yml
 # test if you have helixerlite installed
 helixerlite -h
 ```
-
 
 ### Annotate Maize sequences with different models ###
 ```
