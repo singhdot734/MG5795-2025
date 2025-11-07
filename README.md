@@ -7,18 +7,12 @@ cd MG5795
 ls -l  
 ```
 
-#### Enter the shared class folder and create your own folder
-This is where you do in-lecture practices and homeworks
-```
-cd ~/MG5795/class  
-mkdir name.# (your OSU ID)  
-cd name.# (your OSU ID)  
-```
-
-#### Clone the course folder to your folder
+#### Create your own folder and clone the course folder
 The cloned folder will be the place you practice and run things
 ```
-cd ~/MG5795/class/name.# (your OSU ID)  
+cd ~/MG5795/
+mkdir name.# (your OSU ID)  
+cd name.# (your OSU ID)  
 git clone https://github.com/singhdot734/MG5795-2025.git  
 ```
 

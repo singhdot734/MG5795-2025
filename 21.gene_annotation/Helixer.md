@@ -18,7 +18,7 @@ python -m pip install helixerlite
 ### Annotate Maize sequences with different models ###
 #### 1. request compute resources ####
 ```
-sinteractive -A PAS3124 -n 60 -t 1:00:00
+sinteractive -A PAS3124 -n 60 -t 2:00:00
 ```
 
 #### 2. use HelixerLite to predict genes using varying models ####
@@ -30,5 +30,5 @@ nohup helixerlite --fasta B73_chr2_5M.fa --lineage vertebrate --out B73_chr2_5M.
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage invertebrate --out B73_chr2_5M.invertebrate.output.gff3 -c 30 &
 ```
 
-### Download and Install IGV ###
+### Download and Install IGV on your own computer ###
 https://igv.org/download/html/oldtempfixForDownload.html
