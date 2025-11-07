@@ -20,7 +20,7 @@ helixerlite -h
 ### Annotate Maize sequences with different models ###
 #### 1. request compute resources ####
 ```
-sinteractive -A PAS3124 -n 60 -t 2:00:00
+sinteractive -A PAS3124 -n 48 -t 1:00:00
 ```
 
 #### 2. update your course folder
