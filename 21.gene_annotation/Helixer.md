@@ -11,8 +11,10 @@ https://github.com/nextgenusfs/helixerlite
 
 #### Install HelixerLite ###
 ```
+module load miniconda3/24.1.2-py310 
 conda activate mapping
 python -m pip install helixerlite
+helixerlite -h
 ```
 
 ### Annotate Maize sequences with different models ###
@@ -21,9 +23,16 @@ python -m pip install helixerlite
 sinteractive -A PAS3124 -n 60 -t 2:00:00
 ```
 
-#### 2. use HelixerLite to predict genes using varying models ####
+#### 2. update your course folder
 ```
-conda activate helixer
+cd ~/MG5645/name.#/MG5795-2025  
+git pull  
+```
+
+#### 3. use HelixerLite to predict genes using varying models ####
+```
+conda activate mapping
+cd 21.gene_annotation
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage land_plant --out B73_chr2_5M.land_plant.output.gff3 -c 30 &  
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage fungi --out B73_chr2_5M.fungi.output.gff3 -c 30 &  
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage vertebrate --out B73_chr2_5M.vertebrate.output.gff3 -c 30 &  
