@@ -33,3 +33,31 @@ perl ./EDTA/EDTA.pl -h
 cd ./EDTA/test  
 perl ../EDTA.pl --genome ./genome.fa --cds ./genome.cds.fa --curatedlib ../database/rice7.0.0.liban --exclude genome.exclude.bed --overwrite 1 --sensitive 1 --anno 1 --threads 48
 ```
+
+
+### Playing with the data.
+```
+# View the summary file.
+less genome.fa.mod.EDTA.TEanno.sum
+
+# View the GFF annotation file.
+less genome.fa.mod.EDTA.TEanno.gff3
+
+# View the structurally annotated TEs.
+cat genome.fa.mod.EDTA.TEanno.gff3 | grep 'method=structural' | less 
+
+# View the homology annotated TEs.
+cat genome.fa.mod.EDTA.TEanno.gff3 | grep 'method=homology' | less
+
+# How many LTRs were annotated using a homology approach?
+cat genome.fa.mod.EDTA.TEanno.gff3 | grep 'classification=LTR' | grep 'method=homology' | wc -l
+
+# How many LTRs were annotated using a structural approach?
+cat genome.fa.mod.EDTA.TEanno.gff3 | grep 'classification=LTR' | grep 'method=structural' | wc -l
+
+# Save the structurally annotated LTRs to a new file.
+cat genome.fa.mod.EDTA.TEanno.gff3 | grep 'classification=LTR' | grep 'method=structural' > genome.fa.mod.EDTA.TEanno.struct.LTR.gff3
+
+# Look at fasta headers in your TE library. 
+cat genome.fa.mod.EDTA.TElib.fa | grep '>' | less
+```
