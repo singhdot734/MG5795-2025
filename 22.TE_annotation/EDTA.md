@@ -23,7 +23,7 @@ conda env create -f ./EDTA/EDTA_2.2.x.yml
 # Approach 2
 conda create -n EDTA -y  
 conda activate EDTA  
-conda install -c conda-forge -c bioconda edta  
+conda install -c conda-forge -c bioconda edta -y
 
 ```
 
