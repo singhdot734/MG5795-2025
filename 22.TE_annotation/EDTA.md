@@ -18,7 +18,7 @@ module load miniconda3/24.1.2-py310
 
 # Install EDTA using either approach
 # Approach 1
-conda env create -f ./EDTA/EDTA.yml  
+conda env create -f ./EDTA/EDTA_2.2.x.yml 
 
 # Approach 2
 conda create -n EDTA -y  
