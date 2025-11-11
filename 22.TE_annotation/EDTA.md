@@ -29,7 +29,7 @@ conda install -c conda-forge -c bioconda edta -y
 
 ### Run EDTA.
 ```
-./EDTA/EDTA.pl -h  
+perl ./EDTA/EDTA.pl -h  
 cd ./EDTA/test  
-perl ./EDTA/EDTA.pl --genome ./EDTA/test/genome.fa --cds ./EDTA/test/genome.cds.fa --curatedlib ./EDTA/database/rice7.0.0.liban --exclude genome.exclude.bed --overwrite 1 --sensitive 1 --anno 1 --threads 48  
+perl ../EDTA.pl --genome ./genome.fa --cds ./genome.cds.fa --curatedlib ../database/rice7.0.0.liban --exclude genome.exclude.bed --overwrite 1 --sensitive 1 --anno 1 --threads 48
 ```
