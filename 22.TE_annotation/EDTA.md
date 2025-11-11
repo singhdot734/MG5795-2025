@@ -60,4 +60,7 @@ cat genome.fa.mod.EDTA.TEanno.gff3 | grep 'classification=LTR' | grep 'method=st
 
 # Look at fasta headers in your TE library. 
 cat genome.fa.mod.EDTA.TElib.fa | grep '>' | less
+
+# Count annotations types. 
+cat genome.fa.mod.EDTA.TEanno.gff3 | grep -v '##' | cut -f 3 | sort | uniq -c
 ```
