@@ -18,7 +18,7 @@ module load miniconda3/24.1.2-py310
 
 # Install EDTA using either approach
 # Approach 1
-conda env create -f ./EDTA/EDTA_2.2.x.yml 
+conda env create -f EDTA_OSC.yml
 
 # Approach 2
 conda create -n EDTA -y  
@@ -29,9 +29,10 @@ conda install -c conda-forge -c bioconda edta -y
 
 ### Run EDTA.
 ```
+conda activate EDTA  
 perl ./EDTA/EDTA.pl -h  
 cd ./EDTA/test  
-perl ../EDTA.pl --genome ./genome.fa --cds ./genome.cds.fa --curatedlib ../database/rice7.0.0.liban --exclude genome.exclude.bed --overwrite 1 --sensitive 1 --anno 1 --threads 48
+perl ../EDTA.pl --genome ./genome.fa --curatedlib ../database/rice7.0.0.liban --overwrite 1 --sensitive 1 --anno 1 --threads 48
 ```
 
 
