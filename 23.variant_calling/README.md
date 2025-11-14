@@ -25,7 +25,7 @@ We're going to use a bunch of fun tools for working with genomic data:
 3. [freebayes](https://github.com/ekg/freebayes)
 4. [vcflib](https://github.com/ekg/vcflib/)
 5. [sambamba](https://github.com/lomereiter/sambamba)
-6. [vg](https://github.com/vgteam/vg)
+6. [vt](https://github.com/atks/vt)
 7. [vcftools](https://vcftools.github.io/index.html)
 8. [bcftools](https://github.com/samtools/bcftools)
 9. [snpEFF](https://pcingola.github.io/SnpEff/)
@@ -35,7 +35,7 @@ You can install these tools via conda:
 ```bash
 module load miniconda3/24.1.2-py310
 conda activate mapping
-conda install -c bioconda -c conda-forge minimap2 samtools freebayes vcflib sambamba vg vcftools tectonic pdflatex bcftools
+conda install -c bioconda -c conda-forge minimap2 samtools freebayes vcflib sambamba vcftools tectonic pdflatex bcftools vt matplotlib snpEFF
 ```
 
 ## Part 1: Aligning maize data with `minimap2`
@@ -145,7 +145,7 @@ vcffilter -f 'QUAL / AO > 10' Zea.chr2_5M.vcf | vt peek -
 
 # Apply stricter filters:
 # 	Keep only biallelic sites;
-#	Require ≥2 alt reads (AO >= 2)
+#	Require at least 2 alt reads (AO >= 2)
 # 	Require quality-per-alt-read (QUAL/AO > 10)
 # 	Require no missing genotypes (all samples called)
 NS=4 # four samples
@@ -160,7 +160,9 @@ plot-vcfstats -p vcfstats_plots stats.txt
 
 ### Output variant table
 ```bash
-bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%INFO/DP\t[%SAMPLE\t%GT\t%DP\t]\n' Zea.chr2_5M.filtered.vcf Zea.chr2_5M.filtered.txt
+bgzip Zea.chr2_5M.filtered.vcf
+bcftools index Zea.chr2_5M.filtered.vcf.gz
+bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%INFO/DP\t[%SAMPLE\t%GT\t%DP\t]\n' Zea.chr2_5M.filtered.vcf.gz -o Zea.chr2_5M.filtered.txt
 ```
 
 
