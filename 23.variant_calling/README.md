@@ -28,6 +28,7 @@ We're going to use a bunch of fun tools for working with genomic data:
 6. [vg](https://github.com/vgteam/vg)
 7. [vcftools](https://vcftools.github.io/index.html)
 8. [bcftools](https://github.com/samtools/bcftools)
+9. [snpEFF](https://pcingola.github.io/SnpEff/)
 
 You can install these tools via conda:
 
@@ -140,12 +141,26 @@ vcffilter -f 'QUAL > 10' Zea.chr2_5M.vcf | vt peek -
 
 # scaling quality by depth is like requiring that the additional log-unit contribution
 # of each read is at least N
-vcffilter -f 'QUAL / AO > 10' Zea.chr2_5M.vcf > Zea.chr2_5M.qual10.vcf
+vcffilter -f 'QUAL / AO > 10' Zea.chr2_5M.vcf | vt peek -
+
+# Apply stricter filters:
+# 	Keep only biallelic sites;
+#	Require ≥2 alt reads (AO >= 2)
+# 	Require quality-per-alt-read (QUAL/AO > 10)
+# 	Require no missing genotypes (all samples called)
+NS=4 # four samples
+bcftools view -m2 -M2 -i "INFO/AO>=2 && QUAL/INFO/AO>10 && COUNT(GT!='mis')==$NS" -o Zea.chr2_5M.filtered.vcf Zea.chr2_5M.vcf
 ```
 
 ### Visualize results
 ```bash
-bcftools stats -s - Zea.chr2_5M.qual10.vcf > stats.txt
+bcftools stats -s - Zea.chr2_5M.filtered.vcf > stats.txt
 plot-vcfstats -p vcfstats_plots stats.txt
 ```
+
+### Output variant table
+```bash
+bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%INFO/DP\t[%SAMPLE\t%GT\t%DP\t]\n' Zea.chr2_5M.filtered.vcf Zea.chr2_5M.filtered.txt
+```
+
 
