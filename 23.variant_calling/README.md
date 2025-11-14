@@ -5,6 +5,19 @@ This tutorial is modified from the [alignment-and-variant-calling-tutorial](http
 
 ## Part 0: Setup
 
+### Request compute resources.
+```
+sinteractive -A PAS3124 -c 48 -t 1:00:00
+```
+
+### Update your course folder
+```
+cd ~/MG5645/name.#/MG5795-2025
+git pull
+```
+
+### Install packages
+
 We're going to use a bunch of fun tools for working with genomic data:
 
 1. [minimap2](https://github.com/lh3/minimap2)
@@ -14,14 +27,15 @@ We're going to use a bunch of fun tools for working with genomic data:
 5. [sambamba](https://github.com/lomereiter/sambamba)
 6. [vg](https://github.com/vgteam/vg)
 7. [vcftools](https://vcftools.github.io/index.html)
+8. [bcftools](https://github.com/samtools/bcftools)
 
-In most cases, you can install these tools via conda:
+You can install these tools via conda:
 
 ```bash
-conda install -c bioconda -c conda-forge bwa 
+module load miniconda3/24.1.2-py310
+conda activate mapping
+conda install -c bioconda -c conda-forge minimap2 samtools freebayes vcflib sambamba vg vcftools tectonic pdflatex bcftools
 ```
-
-Otherwise, let's assume you're in an environment where you've already got them available.
 
 ## Part 1: Aligning maize data with `minimap2`
 
@@ -32,6 +46,7 @@ Otherwise, let's assume you're in an environment where you've already got them a
 First, we'll want to allow tools (such as our variant caller) to quickly access certain regions in the reference. This is done using the samtools `.fai` FASTA index format, which records the lengths of the various sequences in the reference and their offsets from the beginning of the file.
 
 ```bash
+cd 23.variant_calling
 samtools faidx B73_chr2_5M.fa
 ```
 
@@ -67,7 +82,7 @@ We will use `minimap2` to align the reads to the reference genome. In the case o
 
 ```bash
 minimap2 -ax sr -t 10 -R '@RG\tID:SRR30894834\tSM:SRR30894834' \
-    B73_chr2_5M.fa SRR30894834.chr2_1M.fastq \
+    B73_chr2_5M.fa SRR30894834.chr2_1M.fastq.gz \
     | samtools view -b - > SRR30894834.raw.bam
 sambamba sort SRR30894834.raw.bam
 sambamba markdup SRR30894834.raw.sorted.bam SRR30894834.raw.sorted.dedup.bam
@@ -86,7 +101,7 @@ Now, run the same alignment process for the other three samples. Make sure to sp
 
 ```bash
 for i in SRR27984607 SRR30894789 SRR30894891; do 
-	minimap2 -ax sr -t 10 -R "@RG\tID:$i\tSM:$i" B73_chr2_5M.fa $i.chr2_1M.fastq \
+	minimap2 -ax sr -t 10 -R "@RG\tID:$i\tSM:$i" B73_chr2_5M.fa $i.chr2_1M.fastq.gz \
 		| samtools view -b - > $i.raw.bam & \
 done
 
@@ -112,7 +127,7 @@ We can put the samples together if we want to find differences between them. Cal
 Another reason to call them jointly is to make sure we have a genotype for each one at every locus where a non-reference allele passes the caller's thresholds in each sample. We would run a joint call by dropping in all BAMs on the command line to freebayes:
 
 ```bash
-freebayes -f B73_chr2_5M.fa --ploidy 2 SRR30894789.sorted.dedup.bam SRR30894834.sorted.dedup.bam SRR30894891.sorted.dedup.bam SRR27984607.sorted.dedup.bam > Zea.chr2_5M.vcf
+freebayes -f B73_chr2_5M.fa --ploidy 2 *sorted.dedup.bam > Zea.chr2_5M.vcf
 ```
 
 ### Hard filtering strategies
@@ -125,29 +140,12 @@ vcffilter -f 'QUAL > 10' Zea.chr2_5M.vcf | vt peek -
 
 # scaling quality by depth is like requiring that the additional log-unit contribution
 # of each read is at least N
-vcffilter -f 'QUAL / AO > 10' Zea.chr2_5M.vcf | vt peek -
-```
-
-Another rule of thumb is restricting variant coverage lower than 3 times the median coverage to control for false alignment.
-
-```bash
-VCF=Zea.chr2_5M.vcf
-
-# median of site-level DP (use INFO/DP) to define the cap
-MED=$(bcftools query -f '%INFO/DP\n' "$VCF" | awk 'NF' | sort -n | \
-      awk '{a[NR]=$1} END{ if(NR%2){print a[(NR+1)/2]} else {print (a[NR/2]+a[NR/2+1])/2} }')
-MAX=$(awk -v m="$MED" 'BEGIN{printf "%.0f", 3*m}')
-
-# set FORMAT/DP outside [, MAX] to missing; keep others
-bcftools filter -e "FORMAT/DP>${MAX}" -S . -Ou "$VCF" \
-  | bcftools view -g ^miss -o Zea.chr2_5M.dpflt.vcf
+vcffilter -f 'QUAL / AO > 10' Zea.chr2_5M.vcf > Zea.chr2_5M.qual10.vcf
 ```
 
 ### Visualize results
 ```bash
-bcftools stats -s 
-
-Zea.chr2_5M.dpflt.vcfvcftools --vcf Zea.chr2_5M.dpflt.vcf --max-missing 0.75 --recode --recode-INFO-all \
-  --out Zea.chr2_5M.miss25 > stats.txt
+bcftools stats -s - Zea.chr2_5M.qual10.vcf > stats.txt
 plot-vcfstats -p vcfstats_plots stats.txt
 ```
+
