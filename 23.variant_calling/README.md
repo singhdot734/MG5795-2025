@@ -35,7 +35,7 @@ You can install these tools via conda:
 ```bash
 module load miniconda3/24.1.2-py310
 conda activate mapping
-conda install -c bioconda -c conda-forge minimap2 samtools freebayes vcflib sambamba vcftools tectonic pdflatex bcftools vt matplotlib snpEFF
+conda install -c bioconda -c conda-forge minimap2 samtools freebayes vcflib sambamba vcftools tectonic pdflatex bcftools vt matplotlib snpeff
 ```
 
 ## Part 1: Aligning maize data with `minimap2`
