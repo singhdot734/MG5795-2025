@@ -174,17 +174,21 @@ less snpEff_genes.txt
 # You need to download snpEff_summary.html and open with your browser for the annotation summary
 ```
 
-### Visualize results
-```bash
-bcftools stats -s - Zea.chr2_5M.filtered.vcf > stats.txt
-plot-vcfstats -p vcfstats_plots stats.txt
-```
-
 ### Output variant table
 ```bash
+# Compress the VCF file and index it using bcftools
 bgzip Zea.chr2_5M.filtered.vcf
 bcftools index Zea.chr2_5M.filtered.vcf.gz
+
+# Convert the VCF file to a tabulated variant table
 bcftools query -f '%CHROM\t%POS\t%ID\t%REF\t%ALT\t%INFO/DP\t[%SAMPLE\t%GT\t%DP\t]\n' Zea.chr2_5M.filtered.vcf.gz -o Zea.chr2_5M.filtered.txt
 ```
 
+### Visualize results
+```bash
+# Summarize the filter VCF file. Outputs are stored in the vcfstats_plots folder.
+bcftools stats -s - Zea.chr2_5M.filtered.vcf.gz > stats.txt
+plot-vcfstats -p vcfstats_plots stats.txt
+
+```
 
