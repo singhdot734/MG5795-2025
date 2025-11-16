@@ -28,7 +28,7 @@ We're going to use a bunch of fun tools for working with genomic data:
 6. [vt](https://github.com/atks/vt)
 7. [vcftools](https://vcftools.github.io/index.html)
 8. [bcftools](https://github.com/samtools/bcftools)
-9. [snpEFF](https://pcingola.github.io/SnpEff/)
+9. [snpEff](https://pcingola.github.io/SnpEff/)
 
 You can install these tools via conda:
 
@@ -150,6 +150,28 @@ vcffilter -f 'QUAL / AO > 10' Zea.chr2_5M.vcf | vt peek -
 # 	Require no missing genotypes (all samples called)
 NS=4 # four samples
 bcftools view -m2 -M2 -i "INFO/AO>=2 && QUAL/INFO/AO>10 && COUNT(GT!='mis')==$NS" -o Zea.chr2_5M.filtered.vcf Zea.chr2_5M.vcf
+```
+
+### Annotate SNP effects
+```bash
+# Create a genome folder in snpEff/data
+mkdir -p snpEff/data/MyGenome
+cp B73_chr2_5M.fa snpEff/data/MyGenome/sequences.fa
+cp ../21.gene_annotation/B73_chr2_5M.Zm00001eb.1.genes.gff3 snpEff/data/MyGenome/genes.gff
+
+# Create and add entry to snpEff.config
+echo "MyGenome.genome : MyGenome" > snpEff/snpEff.config
+
+# Build database for this genome
+snpEff build -gff3 -noCheckCds -noCheckProtein -v MyGenome -c snpEff/snpEff.config
+
+# Annotate your SNP VCF
+snpEff ann MyGenome Zea.chr2_5M.filtered.vcf -c snpEff/snpEff.config > Zea.chr2_5M.filtered.annotated.vcf
+
+# Check out the results
+less snpEff_genes.txt
+
+# You need to download snpEff_summary.html and open with your browser for the annotation summary
 ```
 
 ### Visualize results
