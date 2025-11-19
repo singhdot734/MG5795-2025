@@ -99,10 +99,10 @@ Finally, we are ready for detecting SVs using PacBio long reads. First, let's al
 
 ```bash
 # Map Mo17 long reads to the B73 reference sequence
-minimap2 -ax map-hifi -t 48 -R '@RG\tID:Mo17\tSM:Mo17' B73_chr2_5M.fa Mo17_chr2_5M.fastq.gz | samtools sort - > B73_chr2_5M.Mo17.bam
+minimap2 -ax map-hifi -t 48 -R '@RG\tID:Mo17\tSM:Mo17' B73_chr2_5M.fa Mo17_chr2_5M.fastq.gz | samtools sort - | samtools view -bq 40 > B73_chr2_5M.Mo17.bam
 
 # Map B73 long reads to the B73 reference sequence
-minimap2 -ax map-hifi -t 48 -R '@RG\tID:B73\tSM:B73' B73_chr2_5M.fa B73_chr2_5M.fastq.gz | samtools sort - > B73_chr2_5M.B73.bam
+minimap2 -ax map-hifi -t 48 -R '@RG\tID:B73\tSM:B73' B73_chr2_5M.fa B73_chr2_5M.fastq.gz | samtools sort - | samtools view -bq 40 > B73_chr2_5M.B73.bam
 ```
 
 Using Sniffles v2 to identify SVs that are >= 10 bp with at least 3 reads supporting. Filtering out unreliable read alignments with mapping quality 40 help to control the calling confidence.
