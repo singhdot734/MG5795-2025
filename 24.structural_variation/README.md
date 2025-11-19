@@ -11,9 +11,10 @@ For Structural Variation (SV) detection we will be using multiple methods (Assem
 All the instructions below requires you to think along. You are responsible for a clear data structure on your workspace and to find the individual files that you need. I am happy to assist but please take a moment to look around (`ll`) or think where a certain file could be.
 
 ### The main steps in this Module are:
-1. Assembly based SV detection (using [Assemblytics](http://assemblytics.com/))
-2. Long read based mapping based SV detection (using [Sniffles](https://github.com/fritzsedlazeck/Sniffles))
-3. SV comparison (using [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR))
+1. Short read based InDel detection (using minimap2 alignments from [23.variant_calling](https://github.com/singhdot734/MG5795-2025/tree/main/23.variant_calling))
+2. Assembly based SV detection (using [Assemblytics](http://assemblytics.com/))
+3. Long read based mapping based SV detection (using [Sniffles](https://github.com/fritzsedlazeck/Sniffles))
+4. SV comparison (using [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR))
 
 ## Part 0: Setup
 
@@ -57,7 +58,7 @@ grep -vc '#' B73_chr2_5M.Illumina.InDel.vcf
 ## Part 2: Assembly based SV detection 
 As discussed in the lecture, assembly based SV detection is quite comprehensive. Nevertheless, before we start, we need to align a new assembly to an existing e.g. reference genome to identify structural differences. For this we will be using MUMmer (`nucmer`). Alternatively, you could also utilize `Dipcall` as a program especially if you have a phased assembly at hand. MUMmer is a commonly used package that allows you to rapidly compare two sequences together and includes multiple packages for summary reports over the aligned sequences. This includes variant reporting, coordinate reporting or even the generation of dot plots. As shown in the lecture dot plot is very helpful and intuitive method to compare sequences for us.
 
-To begin to call variants we need to first compare the reference to our assembly. Now initiate the alignment. It will create an alignment file named `out.delta` for our next step.
+To begin to call variants, we need to first compare the reference to our assembly. Now initiate the alignment. It will create an alignment file named `out.delta` for our next step.
 ```
 nucmer -maxmatch -l 100 -c 500 B73_chr2_5M.fa Mo17_chr2_5M.fa
 ```
@@ -73,7 +74,7 @@ less B73-Mo17_chr2_5M.Assemblytics_structural_variants.bed
 less B73-Mo17_chr2_5M.Assemblytics_structural_variants.summary
 ```
 
-To convert the Assemblytics SV into VCF format we will need SURVIVOR. Minimum variant size is set at 10 bp.
+To convert the Assemblytics SV into VCF format, we will need SURVIVOR. Minimum variant size is set at 50 bp.
 ```
 SURVIVOR convertAssemblytics B73-Mo17_chr2_5M.Assemblytics_structural_variants.bed 10 B73_chr2_5M.WGA.SV.vcf
 less -S B73_chr2_5M.WGA.SV.vcf
@@ -90,7 +91,7 @@ grep -v '#' B73_chr2_5M.WGA.SV.vcf | sed 's/.*SVLEN=//; s/;PE.*//' | awk '{LEN+=
 
 
 ## Part 3: Long read based SV detection 
-Finally we are ready for detecting SVs using PacBio long reads. First, let's align the long reads to the reference.
+Finally, we are ready for detecting SVs using PacBio long reads. First, let's align the long reads to the reference.
 
 ```bash
 # Map Mo17 long reads to the B73 reference sequence
@@ -137,14 +138,15 @@ ls B73_chr2_5M.WGA.SV.vcf >> vcf_files
 ls B73_chr2_5M.PacBio.SV.vcf >> vcf_files
 ```
 
-Next we can initiate the compare with 100bp wobble and requiring that we are only merging with SV type agreement. Furthermore, we will only take variants into account with 1bp+. 
+Next, we can initiate the compare with 100bp wobble and requiring that we are only merging with SV type agreement. Furthermore, we will only take variants into account with 1bp+. 
 ```bash
 SURVIVOR merge vcf_files 100 1 1 0 0 0 B73_chr2_5M.merged.SV.vcf
 ```
 Lets check how good/bad the overlap is:
 ```bash
+cat vcf_files
 perl -ne 'print "$1\n" if /SUPP_VEC=([^,;]+)/' B73_chr2_5M.merged.SV.vcf | sort | uniq -c 
 ```
 
-As you can see you will get the pattern and the number of times the pattern occurs. The first number is the number of times it can be observed in the VCF file. The 2nd number is the pattern (0 or 1 depending if it was observed or not) 
+As you can see, you will get the pattern and the number of times the pattern occurs. The first number is the number of times it can be observed in the VCF file. The 2nd number is the pattern (0 or 1 depending if it was observed or not) 
 
