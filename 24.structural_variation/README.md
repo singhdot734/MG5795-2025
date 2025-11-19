@@ -35,7 +35,11 @@ We're going to use a bunch of fun tools for working with genomic data. You can i
 
 ```bash
 module load miniconda3/24.1.2-py310
+
+# if this is the first time you run these module, first install the dependencies. If you have done so, you can directly use the env
 conda create -n sv -c bioconda -c conda-forge survivor "sniffles>2" assemblytics minimap2 bcftools samtools
+
+# activate the sv env
 conda activate sv
 ```
 
