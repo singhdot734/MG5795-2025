@@ -89,7 +89,7 @@ grep -v '#' B73_chr2_5M.WGA.SV.vcf | sed 's/.*SVLEN=//; s/;PE.*//' | awk '{LEN+=
 ```
 
 
-## Part 3: Assembly based SV detection 
+## Part 3: Long read based SV detection 
 Finally we are ready for detecting SVs using PacBio long reads. First, let's align the long reads to the reference.
 
 ```bash
