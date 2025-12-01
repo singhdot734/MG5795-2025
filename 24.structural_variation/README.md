@@ -3,6 +3,13 @@
 This tutorial steps through some basic tasks in alignment and structural variant calling using some maize data sets.
 This tutorial is modified from the [Krumlov_teaching_SV](https://github.com/fritzsedlazeck/teaching_material/blob/main/Krumlov/Krumlov_teaching_SV.md).
 
+Sequences used in this tutorial were derived from:  
+	SRR15447420: [Chen et al. (2023)](https://www.nature.com/articles/s41588-023-01419-6)  
+	SRR11606869: [Hon et al. (2020)](https://www.nature.com/articles/s41597-020-00743-4)  
+	Mo17 assembly: [Chen et al. (2023)](https://www.nature.com/articles/s41588-023-01419-6)  
+	B73 assembly: [Hufford et al. (2021)](https://www.science.org/doi/10.1126/science.abg5289)  
+
+
 ## Goals of this module
 The goal of this module is to get you familiarized with structural variant identification across assembly, short read based mapping and long read based mapping.          
 For Structural Variation (SV) detection we will be using multiple methods (Assemblytics, minimap2, Sniffles) and then later compare them across to obtain more insights about advantages and disadvantages across the different the differnet approaches.

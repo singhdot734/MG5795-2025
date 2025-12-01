@@ -1,5 +1,10 @@
 ## This pipeline uses a reference proteome to liftover gene annotations and perform syntenic analysis using McScan.
+Assemblies used in this tutorial were derived from:
+	Arabidopsis thaliana TAIR10: [GCF_000001735.4](https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000001735.4/)
+	Arabidopsis halleri: [GCA_964271285.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_964271285.1/)
+	Capsella bursa-pastoris: [GCA_036452645.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_036452645.1/)
 
+Tools used in this tutorial:
 1. For liftover: [miniprot](https://github.com/lh3/miniprot)  
 2. For synteny: [mcscan](https://github.com/tanghaibao/jcvi/wiki/Mcscan-(python-version))
 

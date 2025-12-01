@@ -2,6 +2,12 @@
 
 This tutorial steps through some basic tasks in alignment and variant calling using a handful of Illumina sequencing data sets. 
 This tutorial is modified from the [alignment-and-variant-calling-tutorial](https://github.com/ekg/alignment-and-variant-calling-tutorial/tree/master).
+Reads used in this tutorial were derived from:  
+	SRR27984607: [Tittes et al. 2025](https://elifesciences.org/articles/92405)  
+	SRR30894834: [Qu et al. (2024)](https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2024.1431043/full)
+	SRR30894789: [Qu et al. (2024)](https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2024.1431043/full)
+	SRR30894891: [Qu et al. (2024)](https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2024.1431043/full)
+
 
 ## Part 0: Setup
 
