@@ -30,6 +30,8 @@ conda activate synteny
 git clone https://github.com/cwb14/synLTR.git
 ```
 
+## Part 1: Synteny analysis
+
 ### Get three Arabidopsis genomes. 
 ```
 # Arabidopsis thaliana.
@@ -58,7 +60,7 @@ conda activate synteny
 python synLTR/module1.py --genomes *fa --threads 48 --dir_name results --protein_fa Athal.pep --miniprot_outn 5 --script_dir synLTR/module1/
 ```
 
-# View results.
+### View results.
 ```
 # Line 1.
 cat results/Ahall.Athal.anchors.coords.polished2.consolidated | head -1
@@ -66,16 +68,27 @@ Ahall_chr1:2844..49097	Athal_chr1:387478..422154	-
 ```
 *Arabidopsis thaliana* `Athal_chr1:387478-422154` is syntenic to *Arabidopsis halleri* at `Ahall_chr1:2844-49097` on the reverse strand.  
 
-
 ### Download syntenic dotplots from server to personal computer. 
 ```
 ll ./results/dotplots/.pdf   
 ```
-
 
 ### NCBI houses pre-computed syntenic blocks!
 https://www.ncbi.nlm.nih.gov/cgv/browse/GCA_905216605.1/GCF_000001735.4/48945/3702
 https://www.ncbi.nlm.nih.gov/cgv/plot/GCA_905216605.1/GCF_000001735.4/48945/3702  
 The idiogram and the dotplot are two ways to view synteny. 
 
+
+## Part 2: coordinate operations
+
+### Install BEDtools
+```bash
+conda activate synteny
+conda install -c bioconda bedtools
+```
+
+### Find overlaps between genes and SVs
+```bash
+bedtools intersect -a <(grep CDS B73_chr2_5M.Zm00001eb.1.genes.gff3) -b B73_chr2_5M.PacBio.SV.vcf -wo|less
+```
 
