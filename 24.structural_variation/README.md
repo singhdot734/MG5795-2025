@@ -117,19 +117,32 @@ sniffles --input B73_chr2_5M.Mo17.bam --snf B73_chr2_5M.Mo17.snf
 
 # Joint SV calling
 sniffles --input B73_chr2_5M.Mo17.snf B73_chr2_5M.B73.snf \
-	--vcf B73_chr2_5M.PacBio.SV.vcf \
+	--vcf B73_chr2_5M.PacBio.SV.raw.vcf \
 	--reference B73_chr2_5M.fa \
 	--minsvlen 10 --minsupport 3 --mapq 40
 ```
 
 
 Next we can inspect the file with e.g.:
+```bash
+less -S B73_chr2_5M.PacBio.SV.raw.vcf
+grep -vc '#' B73_chr2_5M.PacBio.SV.raw.vcf
 ```
-less -S B73_chr2_5M.PacBio.SV.vcf
+
+How many raw SVs did you detect? 
+
+
+### SV filtering
+Let's perform some filtering to control false positives. 
+First, control quality score of 50 or higher
+Then, remove SVs longer than the read length to reduce errors introduced by alignment uncertainty. Here we use 20kb.
+Last, keep only homozygous since these are maize inbred lines with very low heterozygosity.
+```bash
+bcftools filter -i 'QUAL>=50 && ABS(INFO/SVLEN)<=20000 && GT="1/1"' B73_chr2_5M.PacBio.SV.raw.vcf > B73_chr2_5M.PacBio.SV.vcf
 grep -vc '#' B73_chr2_5M.PacBio.SV.vcf
 ```
 
-How many SV did you detect? 
+How many SVs did you retain?
 
 
 ## Part 4: Structural Variant comparison
