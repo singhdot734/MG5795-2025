@@ -4,10 +4,10 @@ This tutorial steps through some basic tasks in alignment and structural variant
 This tutorial is modified from the [Krumlov_teaching_SV](https://github.com/fritzsedlazeck/teaching_material/blob/main/Krumlov/Krumlov_teaching_SV.md).
 
 Sequences used in this tutorial were derived from:  
-	SRR15447420: [Chen et al. (2023)](https://www.nature.com/articles/s41588-023-01419-6)  
-	SRR11606869: [Hon et al. (2020)](https://www.nature.com/articles/s41597-020-00743-4)  
-	Mo17 assembly: [Chen et al. (2023)](https://www.nature.com/articles/s41588-023-01419-6)  
-	B73 assembly: [Hufford et al. (2021)](https://www.science.org/doi/10.1126/science.abg5289)  
+    SRR15447420: [Chen et al. (2023)](https://www.nature.com/articles/s41588-023-01419-6)  
+    SRR11606869: [Hon et al. (2020)](https://www.nature.com/articles/s41597-020-00743-4)  
+    Mo17 assembly: [Chen et al. (2023)](https://www.nature.com/articles/s41588-023-01419-6)  
+    B73 assembly: [Hufford et al. (2021)](https://www.science.org/doi/10.1126/science.abg5289)  
 
 
 ## Goals of this module
