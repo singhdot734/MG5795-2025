@@ -1,0 +1,96 @@
+---
+title: "TEs_and_Regulation"
+author: "Caleb G"
+date: "2025-12-01"
+output: none
+editor_options:
+  chunk_output_type: console
+---
+If you're reading this from Github, please first start an interactive RStudio session from OSC OnDemand.
+This markdown should be included in the git pull/clone, so access it from inside RStudio after opening a session and clicking the .Rproj link in the "Files" section of the bottom right RStudio window. 
+
+## Start Here
+We'll begin by initializing the environment to make sure all dependencies are present and data objects 
+are loaded. Click the run button on the setup section below. 
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+# Use project-local renv library
+if (!requireNamespace("renv", quietly = TRUE)) {
+  install.packages("renv")
+}
+
+# Source helper functions
+source("Regulation_SourceCode.R")
+
+# Load WGCNA results from repo 
+wgcna_res <- readRDS("WGCNA_fullResults.rds")
+
+bwnet        <- wgcna_res$bwnet
+moduleColors <- wgcna_res$moduleColors
+MEs          <- wgcna_res$mes
+traits       <- wgcna_res$traits
+datExpr      <- wgcna_res$datExpr
+stopifnot(nrow(MEs) == nrow(traits))
+sampN <- nrow(MEs)
+```
+
+
+## Top-level heatmap of full WGCNA result
+From the WGCNA analysis you loaded in above, this will create a heatmap that shows significant 
+correlations between modules and tissues. Significance is represented by asterisks.
+```{r heatmap, message=FALSE, warning=FALSE}
+heat_res <- make_wgcna_heatmap(
+  MEs          = MEs,
+  traits       = traits,
+  moduleColors = moduleColors,
+  sampN        = sampN,
+  pdf_file     = "ME_Trait_heatmap.pdf",
+  cor_csv      = "MEvsTraitCor.csv",
+  fdr_csv      = "MEvsTraitFDR.csv",
+  trait_column = "tissue"
+)
+MEs <- heat_res$MEs_renamed 
+```
+
+
+## Producing networks - Full module view
+This will process a specific module for an indicated tissue for viewing in Cytoscape. 
+The funciton will automatically create a folder in your working directory following a 
+cyto_ME(Mx) format. We will use the .zip file in this subdirectory. 
+```{r cytoscape, message=TRUE, warning=TRUE}
+cyto_res <- run_cytoscape_section(
+  datExpr          = datExpr,
+  traits           = traits,
+  MEs_input        = MEs,
+  moduleColors     = moduleColors,
+  modules          = "M2",
+  trait_column     = "tissue",
+  tissue_label     = "Leaf",
+  connect_cytoscape = FALSE,   # no live Cytoscape on OSC
+  skip_heatmap     = TRUE,
+  export_sif       = TRUE,     # write .sif
+  zip_bundle       = TRUE      # write zip bundle with everything
+)
+```
+
+
+## Producing networks - exploring candidate expression
+After examining the network in cytoscape, we can choose a specific LTR-RT and examine its top 
+20 edgge-weight partners in a heatmap to examine expression patterns throughout the plant. 
+```{r cytoscape, message=TRUE, warning=TRUE}
+cyto_res <- run_cytoscape_section(
+  datExpr          = datExpr,
+  traits           = traits,
+  MEs_input        = MEs,
+  moduleColors     = moduleColors,
+  modules          = "M2",
+  trait_column     = "tissue",
+  ltr_id           = "LTRRT_8065",
+  tissue_label     = "Leaf",
+  connect_cytoscape = FALSE,   # no live Cytoscape on OSC
+  skip_heatmap     = FALSE,
+  export_sif       = FALSE,
+  zip_bundle       = FALSE
+)
+```
+
+
