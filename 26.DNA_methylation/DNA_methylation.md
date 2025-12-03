@@ -45,7 +45,8 @@ Do you know what does each field means? Try to copy the information of a single 
 module load miniconda3/24.1.2-py310
 conda activate mapping
 pbmm2 index B73_chr2_5M.fa B73_chr2_5M.mmi  
-pbmm2 align B73_chr2_5M.fa B73_chr2_5M.hifi_reads.bam B73_chr2_5M.hifi_reads.aln.bam --sort --num-threads 30 -J 2 --preset CCS &  
+pbmm2 align B73_chr2_5M.fa B73_chr2_5M.hifi_reads.bam B73_chr2_5M.hifi_reads.aln.bam \
+	--sort --num-threads 30 -J 2 --preset CCS
 
 # check out the aligned BAM file.
 samtools view B73_chr2_5M.hifi_reads.aln.bam | less
