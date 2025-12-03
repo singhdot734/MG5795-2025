@@ -31,15 +31,29 @@ conda activate mapping
 conda install pbmm2 pb-cpg-tools -c bioconda -y
 ```
 
-
-# Align PacBio long reads to the reference and call CpG methylation probabilities
-`pbmm2` is a PacBio wrapped version of `minimap2`. In `pbmm2 align`, we use `--preset CCS` to use alignment settings optimized for PacBio HiFi reads.
+### Start out analysis 
+First, let check out the PacBio BAM file that contains 5mC information
+```bash
+samtools view B73_chr2_5M.hifi_reads.bam | less
 ```
+Do you know what does each field means? Try to copy the information of a single read and ask AI.
+
+
+# Align PacBio long reads to the reference
+`pbmm2` is a PacBio wrapped version of `minimap2`. In `pbmm2 align`, we use `--preset CCS` to use alignment settings optimized for PacBio HiFi reads.
+```bash
 module load miniconda3/24.1.2-py310
 conda activate mapping
 pbmm2 index B73_chr2_5M.fa B73_chr2_5M.mmi  
 pbmm2 align B73_chr2_5M.fa B73_chr2_5M.hifi_reads.bam B73_chr2_5M.hifi_reads.aln.bam --sort --num-threads 30 -J 2 --preset CCS &  
 
+# check out the aligned BAM file.
+samtools view B73_chr2_5M.hifi_reads.aln.bam | less
+```
+
+# Call CpG methylation probabilities
+Signals from a single read will be noisy. We can increase the methylation calling confidence by the accumulation of signals from multiple reads.
+```bash
 # check out available parameters
 aligned_bam_to_cpg_scores --help
 
@@ -50,4 +64,20 @@ aligned_bam_to_cpg_scores --bam B73_chr2_5M.hifi_reads.aln.bam \
 	--output-prefix B73_chr2_5M.hifi_reads.CpG --threads 30
 
 ```
+Can you explain each of these parameters?
+
+
+# Check out the methylation calling
+Can you explain each field in your data?
+```bash
+zcat B73_chr2_5M.hifi_reads.CpG.combined.bed.gz | less
+```
+Download these files and load onto your IGV:
+>B73_chr2_5M.fa                      
+B73_chr2_5M.EDTA.TEanno.gff3   
+B73_chr2_5M.Zm00001eb.1.genes.gff3   
+B73_chr2_5M.hifi_reads.aln.bam    
+B73_chr2_5M.hifi_reads.aln.bam.bai   
+B73_chr2_5M.hifi_reads.CpG.combined.bw          
+
 
