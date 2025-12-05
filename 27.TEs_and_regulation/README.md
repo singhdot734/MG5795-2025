@@ -29,7 +29,6 @@ Update your course folder
 cd ~/MG5645/name.#/MG5795-2025
 git pull
 ```
-```
 
 Now, in **Files** located in the **Viewer Pane** (bottom right window), click the .Rproj file. This will initialize the
 enviornment and dependencies automatically. Now you can open the *Regulation.Rmd* file by clicking on it in **Files** and 
