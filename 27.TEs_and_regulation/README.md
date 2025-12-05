@@ -7,7 +7,7 @@ potentially acting as their regulators.
 First step is to download and install the desktop version of Cytoscape, which can be done below. 
 ##### 1. Cytoscape install 
 ```
-https://www.https://cytoscape.org/
+www.cytoscape.org
 ```
 
 You can do this either when I mention it in lecture or before class. 
