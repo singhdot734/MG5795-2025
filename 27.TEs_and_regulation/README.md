@@ -24,9 +24,16 @@ RStudio will automatically connect to your OSC account, so your directories will
 the class git repo using the **Terminal** of the RStudio **Console Pane**, the bottom left window. This acts just like the 
 command line. Change directories to the subdirectory for this activity, the same one you used to read this file in Github. 
 
-Now, in **Files** located in the **Viewer Pane** (bottom right), click the .Rproj file. This will initialize the
+Update your course folder
+```bash
+cd ~/MG5645/name.#/MG5795-2025
+git pull
+```
+```
+
+Now, in **Files** located in the **Viewer Pane** (bottom right window), click the .Rproj file. This will initialize the
 enviornment and dependencies automatically. Now you can open the *Regulation.Rmd* file by clicking on it in **Files** and 
-it will pop up in the **Editor Pane**. Execute everything there before continuing below. 
+it will pop up in the **Editor Pane** (upper left window). Execute everything there before continuing below. 
 
 
 ##### 3. Explore in Cytoscape 
