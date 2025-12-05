@@ -10,13 +10,15 @@ If you're reading this from Github, please first start an interactive RStudio se
 This markdown should be included in the git pull/clone, so access it from inside RStudio after opening a session and clicking the .Rproj link in the "Files" section of the bottom right RStudio window. 
 
 ## Start Here
-We'll begin by initializing the environment to make sure all dependencies are present and data objects 
-are loaded. Click the run button on the setup section below. 
+We'll begin by initializing the environment to make sure all dependencies are present and data objects are loaded. Click the run button on the setup section below. 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
 # Use project-local renv library
 if (!requireNamespace("renv", quietly = TRUE)) {
   install.packages("renv")
 }
+install.packages("WGCNA")
+install.packages("pheatmap")
+install.packages("dplyr")
 
 # Source helper functions
 source("Regulation_SourceCode.R")
