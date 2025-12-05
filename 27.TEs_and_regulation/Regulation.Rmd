@@ -12,18 +12,31 @@ This markdown should be included in the git pull/clone, so access it from inside
 ## Start Here
 We'll begin by initializing the environment to make sure all dependencies are present and data objects are loaded. Click the run button on the setup section below. 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+# set the location of this script as the working directory
+script_path <- rstudioapi::getActiveDocumentContext()$path
+script_dir  <- dirname(script_path)
+setwd(script_dir)
+
 # Use project-local renv library
 if (!requireNamespace("renv", quietly = TRUE)) {
   install.packages("renv")
 }
-install.packages("WGCNA")
-install.packages("pheatmap")
-install.packages("dplyr")
+# this installation will take ~10 minutes
+if (!requireNamespace("WGCNA", quietly = TRUE)) {
+  install.packages("WGCNA")
+}
+if (!requireNamespace("pheatmap", quietly = TRUE)) {
+  install.packages("pheatmap")
+}
+if (!requireNamespace("dplyr", quietly = TRUE)) {
+  install.packages("dplyr")
+}
+
 
 # Source helper functions
 source("Regulation_SourceCode.R")
 
-# Load WGCNA results from repo 
+# Load WGCNA results from the precompiled data WGCNA_fullResults.rds 
 wgcna_res <- readRDS("WGCNA_fullResults.rds")
 
 bwnet        <- wgcna_res$bwnet
