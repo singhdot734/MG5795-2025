@@ -39,6 +39,7 @@ helixerlite -h
 
 ### Annotate Maize sequences with different models ###
 ```
+module load miniconda3/24.1.2-py310
 conda activate helixer
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage land_plant --out B73_chr2_5M.land_plant.output.gff3 -c 30 &  
 nohup helixerlite --fasta B73_chr2_5M.fa --lineage fungi --out B73_chr2_5M.fungi.output.gff3 -c 30 &  
