@@ -1,17 +1,17 @@
 ### Request compute resources.
-```
+```bash
 sinteractive -A PAS3124 -c 48 -t 1:00:00
 ```
 
 ### Update your course folder
-```
+```bash
 cd ~/MG5645/name.#/MG5795-2025  
 git pull  
 ```
 
 ### Install EDTA.
 Run them line by line
-```
+```bash
 cd 22.TE_annotation  
 git clone https://github.com/oushujun/EDTA.git  
 module load miniconda3/24.1.2-py310
@@ -27,17 +27,17 @@ conda install -c conda-forge -c bioconda edta -y
 
 ```
 
-### Run EDTA.
-```
+### Run EDTA on the test data
+```bash
 conda activate EDTA  
 perl ./EDTA/EDTA.pl -h  
 cd ./EDTA/test  
-perl ../EDTA.pl --genome ./genome.fa --curatedlib ../database/rice7.0.0.liban --overwrite 1 --sensitive 1 --anno 1 --threads 48
+perl ../EDTA.pl --genome ./genome.fa --curatedlib ../database/rice7.0.0.liban --sensitive 1 --anno 1 --threads 48
 ```
 
 
 ### Playing with the data.
-```
+```bash
 # View the summary file.
 less genome.fa.mod.EDTA.TEanno.sum
 
@@ -64,4 +64,11 @@ cat genome.fa.mod.EDTA.TElib.fa | grep '>' | less
 
 # Count annotations types. 
 cat genome.fa.mod.EDTA.TEanno.gff3 | grep -v '##' | cut -f 3 | sort | uniq -c
+```
+
+### Run EDTA on the B73 sequence
+```bash
+module load miniconda3/24.1.2-py310
+conda activate EDTA  
+perl ./EDTA/EDTA.pl --genome ./B73_chr2_5M.fa --curatedlib ./EDTA/database/maizeTE11122019 --anno 1 --threads 48
 ```
